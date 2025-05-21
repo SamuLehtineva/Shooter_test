@@ -234,22 +234,22 @@ public class PlayerMovement : MonoBehaviour
     void SpeedControl()
     {
         if (OnSlope() && canJump)
+        {
+            if (rigid.velocity.magnitude > moveSpeed)
             {
-                if (rigid.velocity.magnitude > moveSpeed)
-                {
-                    rigid.velocity = rigid.velocity.normalized * moveSpeed;
-                }
+                rigid.velocity = rigid.velocity.normalized * moveSpeed;
             }
-            else
-            {
-                Vector3 flatVel = new Vector3(rigid.velocity.x, 0f, rigid.velocity.z);
+        }
+        else
+        {
+            Vector3 flatVel = new Vector3(rigid.velocity.x, 0f, rigid.velocity.z);
 
-                if (flatVel.magnitude > moveSpeed)
-                {
-                    Vector3 limitedVel = flatVel.normalized * moveSpeed;
-                    rigid.velocity = new Vector3(limitedVel.x, rigid.velocity.y, limitedVel.z);
-                }
+            if (flatVel.magnitude > moveSpeed)
+            {
+                Vector3 limitedVel = flatVel.normalized * moveSpeed;
+                rigid.velocity = new Vector3(limitedVel.x, rigid.velocity.y, limitedVel.z);
             }
+        }
     }
 
     private IEnumerator LerpMoveSpeed()

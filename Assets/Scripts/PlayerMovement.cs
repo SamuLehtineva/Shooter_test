@@ -100,6 +100,7 @@ public class PlayerMovement : MonoBehaviour
         MyInput();
         UpdateText();
         dashBar.SetValue(dashCooldownTimer / dashCooldown);
+        momentum = OnSlope();
     }
 
     void FixedUpdate() {
@@ -125,7 +126,7 @@ public class PlayerMovement : MonoBehaviour
         {
             SlidingMovement();
         }
-        momentum = rigid.useGravity;
+        
     }
 
     void StateHandler()
@@ -169,11 +170,10 @@ public class PlayerMovement : MonoBehaviour
         }
 
 
-        if (Mathf.Abs(desiredMoveSpeed - lastDesiredMoveSpeed) > 2f)
+        if (Mathf.Abs(desiredMoveSpeed - lastDesiredMoveSpeed) > 2f && moveSpeed != 0)
         {
             StopCoroutine(LerpMoveSpeed());
             StartCoroutine(LerpMoveSpeed());
-            Debug.Log("Decelerate");
         }
         else if (isGrounded && !isWallRunning && !sliding)
         {
@@ -234,22 +234,22 @@ public class PlayerMovement : MonoBehaviour
     void SpeedControl()
     {
         if (OnSlope() && canJump)
-        {
-            if (rigid.velocity.magnitude > moveSpeed)
             {
-                rigid.velocity = rigid.velocity.normalized * moveSpeed;
+                if (rigid.velocity.magnitude > moveSpeed)
+                {
+                    rigid.velocity = rigid.velocity.normalized * moveSpeed;
+                }
             }
-        }
-        else
-        {
-            Vector3 flatVel = new Vector3(rigid.velocity.x, 0f, rigid.velocity.z);
-
-            if (flatVel.magnitude > moveSpeed)
+            else
             {
+                Vector3 flatVel = new Vector3(rigid.velocity.x, 0f, rigid.velocity.z);
+
+                if (flatVel.magnitude > moveSpeed)
+                {
                     Vector3 limitedVel = flatVel.normalized * moveSpeed;
                     rigid.velocity = new Vector3(limitedVel.x, rigid.velocity.y, limitedVel.z);
+                }
             }
-        }
     }
 
     private IEnumerator LerpMoveSpeed()
@@ -313,8 +313,8 @@ public class PlayerMovement : MonoBehaviour
 
     bool OnSlope()
     {
-        Debug.DrawRay(transform.position, Vector3.down * (2 * 0.5f + 0.6f), Color.red);
-        if (Physics.Raycast(transform.position, Vector3.down, out slopeHit, playerHeight * 0.5f + 0.6f))
+        Debug.DrawRay(transform.position, Vector3.down * (2 * 0.5f + 0.4f), Color.red);
+        if (Physics.Raycast(transform.position, Vector3.down, out slopeHit, playerHeight * 0.5f + 0.4f))
         {
             float angle = Vector3.Angle(Vector3.up, slopeHit.normal);
             return angle < maxSlopeAngle && angle != 0;

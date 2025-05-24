@@ -100,11 +100,10 @@ public class PlayerMovement : MonoBehaviour
         MyInput();
         UpdateText();
         dashBar.SetValue(dashCooldownTimer / dashCooldown);
-        momentum = OnSlope();
     }
 
     void FixedUpdate() {
-        isGrounded = Physics.Raycast(transform.position, Vector3.down, playerHeight * 0.5f + 0.4f, groundMask);
+        isGrounded = Physics.Raycast(transform.position, Vector3.down, playerHeight * 0.5f + 0.2f, groundMask);
         if (isGrounded)
         {
             rigid.drag = groundDrag;
@@ -209,14 +208,9 @@ public class PlayerMovement : MonoBehaviour
 			{
                 if (GetSlopeMoveDirection().y < 0.1f)
                 {
-                    rigid.AddForce(Vector3.down * 120f, ForceMode.Force);
-                    Debug.Log("down force");
+                    rigid.AddForce(Vector3.down * 200f, ForceMode.Force);
+                    momentum = true;
                 }
-                    
-                if (rigid.velocity.y < 0f && GetSlopeMoveDirection().y > -0.1f)
-				{
-                    rigid.velocity = new Vector3(rigid.velocity.x, 0f, rigid.velocity.z);
-				}
 			}
 		}
         else if (isGrounded)
@@ -313,8 +307,8 @@ public class PlayerMovement : MonoBehaviour
 
     bool OnSlope()
     {
-        Debug.DrawRay(transform.position, Vector3.down * (2 * 0.5f + 0.4f), Color.red);
-        if (Physics.Raycast(transform.position, Vector3.down, out slopeHit, playerHeight * 0.5f + 0.4f))
+        Debug.DrawRay(transform.position, Vector3.down * (2 * 0.5f + 0.2f), Color.red);
+        if (Physics.Raycast(transform.position, Vector3.down, out slopeHit, playerHeight * 0.5f + 0.2f))
         {
             float angle = Vector3.Angle(Vector3.up, slopeHit.normal);
             return angle < maxSlopeAngle && angle != 0;

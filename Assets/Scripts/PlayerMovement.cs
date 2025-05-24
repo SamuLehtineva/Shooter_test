@@ -208,7 +208,7 @@ public class PlayerMovement : MonoBehaviour
 			{
                 if (GetSlopeMoveDirection().y < 0.1f)
                 {
-                    rigid.AddForce(Vector3.down * 200f, ForceMode.Force);
+                    rigid.AddForce(Vector3.down * 80f, ForceMode.Force);
                     momentum = true;
                 }
 			}

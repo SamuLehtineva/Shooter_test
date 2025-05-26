@@ -142,6 +142,7 @@ public class WallRunning : MonoBehaviour
 
         rigid.AddForce(wallForward * wallRunForce, ForceMode.Force);
 
+        // push to wall
         if (!(wallLeft && moveInput.y > 0) && !(wallRight && moveInput.y < 0))
         {
             rigid.AddForce(-wallNormal * 100, ForceMode.Force);
@@ -151,7 +152,7 @@ public class WallRunning : MonoBehaviour
     void StopWallRun()
     {
         pm.isWallRunning = false;
-        cam.DoFov(80f);
+        //cam.DoFov(80f);
         cam.DoTilt(0f);
     }
 
@@ -168,6 +169,15 @@ public class WallRunning : MonoBehaviour
 
             rigid.velocity = new Vector3(rigid.velocity.x, 0f, rigid.velocity.z);
             rigid.AddForce(forceToApply, ForceMode.Impulse);
+        }
+    }
+
+    void StartWallJump()
+    {
+        if (pm.isWallRunning)
+        {
+            exitingWall = true;
+            exitWallTimer = exitWallCoolDown;
         }
     }
 

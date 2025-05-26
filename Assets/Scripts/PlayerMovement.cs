@@ -209,7 +209,6 @@ public class PlayerMovement : MonoBehaviour
                 if (GetSlopeMoveDirection().y < 0.1f)
                 {
                     rigid.AddForce(Vector3.down * 80f, ForceMode.Force);
-                    momentum = true;
                 }
 			}
 		}
@@ -221,8 +220,16 @@ public class PlayerMovement : MonoBehaviour
         {
             rigid.AddForce(moveDirection.normalized * moveSpeed * 10f * airMultiplier, ForceMode.Force);
         }
-        
-        rigid.useGravity = !OnSlope();
+
+        if (OnSlope() || isWallRunning)
+        {
+            rigid.useGravity = false;
+        }
+        else
+        {
+            rigid.useGravity = true;
+        }
+        //rigid.useGravity = !OnSlope();
     }
 
     void SpeedControl()

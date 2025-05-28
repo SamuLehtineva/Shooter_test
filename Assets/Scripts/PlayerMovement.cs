@@ -286,8 +286,17 @@ public class PlayerMovement : MonoBehaviour
         {
             rigid.velocity = new Vector3(rigid.velocity.x, 0, rigid.velocity.z);
             rigid.AddForce(transform.up * jumpForce, ForceMode.Impulse);
+            if (sliding)
+            {
+                rigid.AddForce(transform.forward * 250f);
+            }
             canJump = false;
             Invoke(nameof(ResetJump), jumpCooldown);
+            if (sliding)
+            {
+                StopSlide();
+            }
+            
         }
         else if (canDoubleJump && !isWallRunning)
         {

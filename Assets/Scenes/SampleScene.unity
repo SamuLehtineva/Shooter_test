@@ -1998,7 +1998,7 @@ PrefabInstance:
       objectReference: {fileID: 1549049196}
     - target: {fileID: 2292694230993138850, guid: 88b791e40fe68f24994d49637d61005a, type: 3}
       propertyPath: jumpForce
-      value: 15
+      value: 20
       objectReference: {fileID: 0}
     - target: {fileID: 2292694230993138850, guid: 88b791e40fe68f24994d49637d61005a, type: 3}
       propertyPath: speedText
@@ -2081,8 +2081,20 @@ PrefabInstance:
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 2292694230993138862, guid: 88b791e40fe68f24994d49637d61005a, type: 3}
+      propertyPath: fuelBar
+      value: 
+      objectReference: {fileID: 1549049196}
+    - target: {fileID: 2292694230993138862, guid: 88b791e40fe68f24994d49637d61005a, type: 3}
+      propertyPath: flyDrain
+      value: 20
+      objectReference: {fileID: 0}
+    - target: {fileID: 2292694230993138862, guid: 88b791e40fe68f24994d49637d61005a, type: 3}
+      propertyPath: flyPower
+      value: 20
+      objectReference: {fileID: 0}
+    - target: {fileID: 2292694230993138862, guid: 88b791e40fe68f24994d49637d61005a, type: 3}
       propertyPath: boostPower
-      value: 25
+      value: 20
       objectReference: {fileID: 0}
     - target: {fileID: 2292694230993138863, guid: 88b791e40fe68f24994d49637d61005a, type: 3}
       propertyPath: cam

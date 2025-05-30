@@ -8,7 +8,6 @@ public class PlayerMovement : MonoBehaviour
 {
     [Header("Misc")]
     public Transform orientation;
-    public UIBar dashBar;
 
     [Header("Movement")]
     public float walkSpeed;
@@ -73,7 +72,9 @@ public class PlayerMovement : MonoBehaviour
         walking,
         air,
         sliding,
-        wallrunning
+        slidejump,
+        wallrunning,
+        walljump
     }
 
     public bool momentum;
@@ -99,7 +100,6 @@ public class PlayerMovement : MonoBehaviour
     {
         MyInput();
         UpdateText();
-        dashBar.SetValue(dashCooldownTimer / dashCooldown);
     }
 
     void FixedUpdate() {
@@ -116,10 +116,6 @@ public class PlayerMovement : MonoBehaviour
         MovePlayer();
         DashMove();
         DashCooldown();
-        if (OnSlope())
-        {
-            //Debug.Log("ONSLOpe");
-        }
         SpeedControl();
         if (sliding)
         {
@@ -141,12 +137,10 @@ public class PlayerMovement : MonoBehaviour
 
             if (OnSlope() && rigid.velocity.y < 0.1f)
             {
-                //Debug.Log("jee");
                 desiredMoveSpeed = slideSpeed;
             }
             else
             {
-                //Debug.Log("not jee");
                 desiredMoveSpeed = walkSpeed * 1.5f;
             }
         }
@@ -154,14 +148,6 @@ public class PlayerMovement : MonoBehaviour
         {
             state = MovementState.walking;
             desiredMoveSpeed = walkSpeed;
-            /*if (moveInput != Vector2.zero)
-            {
-                desiredMoveSpeed = walkSpeed;
-            }
-            else
-            {
-                desiredMoveSpeed = 0;
-            }*/
         }
         else
         {
@@ -292,10 +278,10 @@ public class PlayerMovement : MonoBehaviour
             }
             canJump = false;
             Invoke(nameof(ResetJump), jumpCooldown);
-            if (sliding)
+            /*if (sliding)
             {
                 StopSlide();
-            }
+            }*/
             
         }
         else if (canDoubleJump && !isWallRunning)

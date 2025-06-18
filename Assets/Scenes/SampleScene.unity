@@ -635,6 +635,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   target: {fileID: 1401260131}
+  cameraCopy: {fileID: 1986339452}
 --- !u!4 &181047658
 Transform:
   m_ObjectHideFlags: 0
@@ -1849,6 +1850,36 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &1986339451
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1986339452}
+  m_Layer: 0
+  m_Name: CameraRotation
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1986339452
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1986339451}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 466841614}
+  m_RootOrder: 4
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &2022462892
 GameObject:
   m_ObjectHideFlags: 0
@@ -2013,6 +2044,10 @@ PrefabInstance:
       value: 22
       objectReference: {fileID: 0}
     - target: {fileID: 2292694230993138850, guid: 88b791e40fe68f24994d49637d61005a, type: 3}
+      propertyPath: boostSpeed
+      value: 100
+      objectReference: {fileID: 0}
+    - target: {fileID: 2292694230993138850, guid: 88b791e40fe68f24994d49637d61005a, type: 3}
       propertyPath: slideSpeed
       value: 30
       objectReference: {fileID: 0}
@@ -2094,7 +2129,23 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 2292694230993138862, guid: 88b791e40fe68f24994d49637d61005a, type: 3}
       propertyPath: boostPower
-      value: 20
+      value: 50
+      objectReference: {fileID: 0}
+    - target: {fileID: 2292694230993138862, guid: 88b791e40fe68f24994d49637d61005a, type: 3}
+      propertyPath: reFuelRate
+      value: 25
+      objectReference: {fileID: 0}
+    - target: {fileID: 2292694230993138862, guid: 88b791e40fe68f24994d49637d61005a, type: 3}
+      propertyPath: cameraHolder
+      value: 
+      objectReference: {fileID: 1986339452}
+    - target: {fileID: 2292694230993138862, guid: 88b791e40fe68f24994d49637d61005a, type: 3}
+      propertyPath: flyDrainRate
+      value: 30
+      objectReference: {fileID: 0}
+    - target: {fileID: 2292694230993138862, guid: 88b791e40fe68f24994d49637d61005a, type: 3}
+      propertyPath: boostDrainRate
+      value: 5
       objectReference: {fileID: 0}
     - target: {fileID: 2292694230993138863, guid: 88b791e40fe68f24994d49637d61005a, type: 3}
       propertyPath: cam

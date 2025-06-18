@@ -13,6 +13,7 @@ public class PlayerMovement : MonoBehaviour
     public float walkSpeed;
     public float slideSpeed;
     public float wallSpeed;
+    public float boostSpeed;
     public float groundDrag;
     public float speedIncreaseMultiplier;
     public float slopeIncreaseMultiplier;
@@ -49,7 +50,7 @@ public class PlayerMovement : MonoBehaviour
     [Header("Ground Check")]
     public float playerHeight;
     public LayerMask groundMask;
-    private bool isGrounded;
+    public bool isGrounded;
 
     [Header("Slope Handling")]
     public float maxSlopeAngle;
@@ -65,6 +66,7 @@ public class PlayerMovement : MonoBehaviour
     public TextMeshProUGUI desiredText;
 
     public bool isWallRunning;
+    public bool isBoosting;
 
     public MovementState state;
     public enum MovementState
@@ -74,7 +76,8 @@ public class PlayerMovement : MonoBehaviour
         sliding,
         slidejump,
         wallrunning,
-        walljump
+        walljump,
+        boosting
     }
 
     public bool momentum;
@@ -126,33 +129,38 @@ public class PlayerMovement : MonoBehaviour
 
     void StateHandler()
     {
-        if (isWallRunning)
+        if (isBoosting)
         {
-            state = MovementState.wallrunning;
-            desiredMoveSpeed = wallSpeed;
+            state = MovementState.boosting;
+            desiredMoveSpeed = boostSpeed;
         }
-        else if (isGrounded && sliding)
-        {
-            state = MovementState.sliding;
-
-            if (OnSlope() && rigid.velocity.y < 0.1f)
+        else if (isWallRunning)
             {
-                desiredMoveSpeed = slideSpeed;
+                state = MovementState.wallrunning;
+                desiredMoveSpeed = wallSpeed;
+            }
+            else if (isGrounded && sliding)
+            {
+                state = MovementState.sliding;
+
+                if (OnSlope() && rigid.velocity.y < 0.1f)
+                {
+                    desiredMoveSpeed = slideSpeed;
+                }
+                else
+                {
+                    desiredMoveSpeed = walkSpeed * 1.5f;
+                }
+            }
+            else if (isGrounded)
+            {
+                state = MovementState.walking;
+                desiredMoveSpeed = walkSpeed;
             }
             else
             {
-                desiredMoveSpeed = walkSpeed * 1.5f;
+                state = MovementState.air;
             }
-        }
-        else if (isGrounded)
-        {
-            state = MovementState.walking;
-            desiredMoveSpeed = walkSpeed;
-        }
-        else
-        {
-            state = MovementState.air;
-        }
 
 
         if (Mathf.Abs(desiredMoveSpeed - lastDesiredMoveSpeed) > 2f && moveSpeed != 0)
@@ -207,7 +215,7 @@ public class PlayerMovement : MonoBehaviour
             rigid.AddForce(moveDirection.normalized * moveSpeed * 10f * airMultiplier, ForceMode.Force);
         }
 
-        if (OnSlope() || isWallRunning)
+        if (OnSlope() || isWallRunning || isBoosting)
         {
             rigid.useGravity = false;
         }

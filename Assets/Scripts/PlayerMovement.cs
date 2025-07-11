@@ -116,10 +116,14 @@ public class PlayerMovement : MonoBehaviour
             rigid.drag = 0;
         }
         StateHandler();
-        MovePlayer();
+        
         DashMove();
         DashCooldown();
-        SpeedControl();
+        if (!isBoosting)
+        {
+            SpeedControl();
+            MovePlayer();
+        }
         if (sliding)
         {
             SlidingMovement();
@@ -129,38 +133,33 @@ public class PlayerMovement : MonoBehaviour
 
     void StateHandler()
     {
-        if (isBoosting)
+        if (isWallRunning)
         {
-            state = MovementState.boosting;
-            desiredMoveSpeed = boostSpeed;
+            state = MovementState.wallrunning;
+            desiredMoveSpeed = wallSpeed;
         }
-        else if (isWallRunning)
-            {
-                state = MovementState.wallrunning;
-                desiredMoveSpeed = wallSpeed;
-            }
-            else if (isGrounded && sliding)
-            {
-                state = MovementState.sliding;
+        else if (isGrounded && sliding)
+        {
+            state = MovementState.sliding;
 
-                if (OnSlope() && rigid.velocity.y < 0.1f)
-                {
-                    desiredMoveSpeed = slideSpeed;
-                }
-                else
-                {
-                    desiredMoveSpeed = walkSpeed * 1.5f;
-                }
-            }
-            else if (isGrounded)
+            if (OnSlope() && rigid.velocity.y < 0.1f)
             {
-                state = MovementState.walking;
-                desiredMoveSpeed = walkSpeed;
+                desiredMoveSpeed = slideSpeed;
             }
             else
             {
-                state = MovementState.air;
+                desiredMoveSpeed = walkSpeed * 1.5f;
             }
+        }
+        else if (isGrounded)
+        {
+            state = MovementState.walking;
+            desiredMoveSpeed = walkSpeed;
+        }
+        else
+        {
+            state = MovementState.air;
+        }
 
 
         if (Mathf.Abs(desiredMoveSpeed - lastDesiredMoveSpeed) > 2f && moveSpeed != 0)

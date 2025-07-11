@@ -2045,7 +2045,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 2292694230993138850, guid: 88b791e40fe68f24994d49637d61005a, type: 3}
       propertyPath: boostSpeed
-      value: 100
+      value: 50
       objectReference: {fileID: 0}
     - target: {fileID: 2292694230993138850, guid: 88b791e40fe68f24994d49637d61005a, type: 3}
       propertyPath: slideSpeed

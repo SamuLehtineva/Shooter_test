@@ -38,6 +38,7 @@ public class PlayerMovement : MonoBehaviour
     private float startYScale;
     private float slideInput;
     private bool canSlide;
+    private Vector3 slideDirection;
 
     [Header("Dash")]
     public float dashSpeed;
@@ -111,7 +112,12 @@ public class PlayerMovement : MonoBehaviour
         {
             rigid.drag = groundDrag;
             ResetDoubleJump();
-        } else 
+            if (!sliding)
+            {
+                momentum = false;
+            }
+        }
+        else
         {
             rigid.drag = 0;
         }
@@ -309,10 +315,6 @@ public class PlayerMovement : MonoBehaviour
         canDoubleJump = true;
     }
 
-    void ResetSlide()
-    {
-        canSlide = true;
-    }
 
     bool OnSlope()
     {
@@ -381,13 +383,15 @@ public class PlayerMovement : MonoBehaviour
 
         transform.localScale = new Vector3(transform.localScale.x, slideYScale, transform.localScale.z);
         rigid.AddForce(Vector3.down * 5f, ForceMode.Impulse);
-        
+
         slideTimer = maxSlideTime;
+        slideDirection = moveDirection;
     }
 
     void SlidingMovement()
     {
-        Vector3 moveDirection = orientation.forward * moveInput.y + orientation.right * moveInput.x;
+        //Vector3 moveDirection = orientation.forward * moveInput.y + orientation.right * moveInput.x;
+        moveDirection = slideDirection;
 
         if (!OnSlope() || rigid.velocity.y > -0.1f)
         {
@@ -397,9 +401,9 @@ public class PlayerMovement : MonoBehaviour
         else
         {
             rigid.AddForce(GetSlopeMoveDirection() * slideForce * 1.5f, ForceMode.Force);
-            
+
             if (GetSlopeMoveDirection().y < 0.1f)
-			{
+            {
                 rigid.AddForce(Vector3.down * 200f, ForceMode.Force);
             }
         }
@@ -416,6 +420,11 @@ public class PlayerMovement : MonoBehaviour
         sliding = false;
         transform.localScale = new Vector3(transform.localScale.x, startYScale, transform.localScale.z);
         Invoke(nameof(ResetSlide), slideCooldown);
+    }
+
+    void ResetSlide()
+    {
+        canSlide = true;
     }
 
     void UpdateText()

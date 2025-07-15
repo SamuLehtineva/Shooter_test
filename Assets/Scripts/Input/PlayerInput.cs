@@ -89,6 +89,15 @@ public partial class @PlayerInput : IInputActionCollection2, IDisposable
                     ""processors"": """",
                     ""interactions"": """",
                     ""initialStateCheck"": true
+                },
+                {
+                    ""name"": ""PrimaryFire"",
+                    ""type"": ""Button"",
+                    ""id"": ""49e1bd6b-f08c-4733-9eb6-537932aaca98"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
                 }
             ],
             ""bindings"": [
@@ -212,6 +221,17 @@ public partial class @PlayerInput : IInputActionCollection2, IDisposable
                     ""action"": ""Fly"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""e6ab416b-f95a-42ce-8e25-6a3801793621"",
+                    ""path"": ""<Mouse>/leftButton"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""PrimaryFire"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
                 }
             ]
         }
@@ -227,6 +247,7 @@ public partial class @PlayerInput : IInputActionCollection2, IDisposable
         m_Player_Slide = m_Player.FindAction("Slide", throwIfNotFound: true);
         m_Player_Boost = m_Player.FindAction("Boost", throwIfNotFound: true);
         m_Player_Fly = m_Player.FindAction("Fly", throwIfNotFound: true);
+        m_Player_PrimaryFire = m_Player.FindAction("PrimaryFire", throwIfNotFound: true);
     }
 
     public void Dispose()
@@ -293,6 +314,7 @@ public partial class @PlayerInput : IInputActionCollection2, IDisposable
     private readonly InputAction m_Player_Slide;
     private readonly InputAction m_Player_Boost;
     private readonly InputAction m_Player_Fly;
+    private readonly InputAction m_Player_PrimaryFire;
     public struct PlayerActions
     {
         private @PlayerInput m_Wrapper;
@@ -304,6 +326,7 @@ public partial class @PlayerInput : IInputActionCollection2, IDisposable
         public InputAction @Slide => m_Wrapper.m_Player_Slide;
         public InputAction @Boost => m_Wrapper.m_Player_Boost;
         public InputAction @Fly => m_Wrapper.m_Player_Fly;
+        public InputAction @PrimaryFire => m_Wrapper.m_Player_PrimaryFire;
         public InputActionMap Get() { return m_Wrapper.m_Player; }
         public void Enable() { Get().Enable(); }
         public void Disable() { Get().Disable(); }
@@ -334,6 +357,9 @@ public partial class @PlayerInput : IInputActionCollection2, IDisposable
                 @Fly.started -= m_Wrapper.m_PlayerActionsCallbackInterface.OnFly;
                 @Fly.performed -= m_Wrapper.m_PlayerActionsCallbackInterface.OnFly;
                 @Fly.canceled -= m_Wrapper.m_PlayerActionsCallbackInterface.OnFly;
+                @PrimaryFire.started -= m_Wrapper.m_PlayerActionsCallbackInterface.OnPrimaryFire;
+                @PrimaryFire.performed -= m_Wrapper.m_PlayerActionsCallbackInterface.OnPrimaryFire;
+                @PrimaryFire.canceled -= m_Wrapper.m_PlayerActionsCallbackInterface.OnPrimaryFire;
             }
             m_Wrapper.m_PlayerActionsCallbackInterface = instance;
             if (instance != null)
@@ -359,6 +385,9 @@ public partial class @PlayerInput : IInputActionCollection2, IDisposable
                 @Fly.started += instance.OnFly;
                 @Fly.performed += instance.OnFly;
                 @Fly.canceled += instance.OnFly;
+                @PrimaryFire.started += instance.OnPrimaryFire;
+                @PrimaryFire.performed += instance.OnPrimaryFire;
+                @PrimaryFire.canceled += instance.OnPrimaryFire;
             }
         }
     }
@@ -372,5 +401,6 @@ public partial class @PlayerInput : IInputActionCollection2, IDisposable
         void OnSlide(InputAction.CallbackContext context);
         void OnBoost(InputAction.CallbackContext context);
         void OnFly(InputAction.CallbackContext context);
+        void OnPrimaryFire(InputAction.CallbackContext context);
     }
 }

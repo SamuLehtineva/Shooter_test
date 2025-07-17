@@ -37,6 +37,7 @@
   </PropertyGroup>
   <ItemGroup>
      <Compile Include="Assets\Scripts\MoveCamera.cs" />
+     <Compile Include="Assets\Scripts\Weapons\Weapon_1.cs" />
      <Compile Include="Assets\Scripts\Managers\AddonManager.cs" />
      <Compile Include="Assets\Scripts\RocketBoost.cs" />
      <Compile Include="Assets\Scripts\PlayerMovement.cs" />
@@ -45,11 +46,12 @@
      <Compile Include="Assets\Scripts\WallRunning.cs" />
      <Compile Include="Assets\Scripts\Managers\InputManager.cs" />
      <Compile Include="Assets\Scripts\Input\PlayerInput.cs" />
+     <Compile Include="Assets\Scripts\Bullets\BouncingBullet.cs" />
+     <Compile Include="Assets\Scripts\Managers\WeaponManager.cs" />
      <Compile Include="Assets\Scripts\UIBar.cs" />
      <Compile Include="Assets\Scripts\MomentumMarker.cs" />
-     <Compile Include="Assets\Scripts\Sliding.cs" />
      <Compile Include="Assets\Scripts\Bullets\FlyingBullet.cs" />
-     <Compile Include="Assets\Scripts\Bullets\BouncingBullet.cs" />
+     <Compile Include="Assets\Scripts\Sliding.cs" />
      <None Include="Assets\TextMesh Pro\Shaders\TMPro.cginc" />
      <None Include="Assets\TextMesh Pro\Shaders\TMP_SDF-Mobile Overlay.shader" />
      <None Include="Assets\TextMesh Pro\Shaders\TMP_Bitmap.shader" />

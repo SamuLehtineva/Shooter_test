@@ -37,7 +37,7 @@
   </PropertyGroup>
   <ItemGroup>
      <Compile Include="Assets\Scripts\MoveCamera.cs" />
-     <Compile Include="Assets\Scripts\Weapons\Weapon_1.cs" />
+     <Compile Include="Assets\Scripts\Guns\Gun_test1.cs" />
      <Compile Include="Assets\Scripts\Managers\AddonManager.cs" />
      <Compile Include="Assets\Scripts\RocketBoost.cs" />
      <Compile Include="Assets\Scripts\PlayerMovement.cs" />
@@ -47,7 +47,6 @@
      <Compile Include="Assets\Scripts\Managers\InputManager.cs" />
      <Compile Include="Assets\Scripts\Input\PlayerInput.cs" />
      <Compile Include="Assets\Scripts\Bullets\BouncingBullet.cs" />
-     <Compile Include="Assets\Scripts\Managers\WeaponManager.cs" />
      <Compile Include="Assets\Scripts\UIBar.cs" />
      <Compile Include="Assets\Scripts\MomentumMarker.cs" />
      <Compile Include="Assets\Scripts\Bullets\FlyingBullet.cs" />

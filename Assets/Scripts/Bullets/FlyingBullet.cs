@@ -6,23 +6,41 @@ public class FlyingBullet : MonoBehaviour
 {
     public float speed = 10;
     public float damage = 10;
-    public float lifeTime = 10;
+    public float lifeTime = 5;
 
     private float timer = 0f;
+    private Vector3 lastPos;
 
-    void Awake()
+    void Update()
     {
-        //GetComponent<Rigidbody>().velocity = transform.forward * speed;
+        //transform.position += transform.forward * speed * Time.deltaTime;
+        transform.position += transform.forward * speed * Time.fixedDeltaTime;
     }
 
     void FixedUpdate()
     {
+        //transform.position += transform.forward * speed * Time.fixedDeltaTime;
+
         timer += Time.fixedDeltaTime;
         if (timer > lifeTime)
         {
-            Destroy(this);
+            Destroy(this.gameObject);
         }
+        CheckHit();
+    }
 
-        GetComponent<Rigidbody>().AddForce(transform.forward * speed);
+    void CheckHit()
+    {
+        RaycastHit hit;
+
+        //if (Physics.Raycast(transform.position, transform.forward, out hit, 0.15f))
+        if (Physics.Raycast(transform.position + transform.forward * speed * Time.fixedDeltaTime, transform.forward, out hit, 0.15f))
+        {
+            Debug.Log(hit);
+            if (hit.transform.gameObject.layer == 6)
+            {
+                Destroy(this.gameObject);
+            }
+        }
     }
 }

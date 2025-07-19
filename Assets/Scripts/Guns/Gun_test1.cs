@@ -2,10 +2,11 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Weapon_1 : MonoBehaviour
+public class Gun_test1 : MonoBehaviour
 {
     public GameObject bullet;
     public Transform cameraHolder;
+    public Transform bulletSpawn;
     public float fireDelay;
 
     private float timer;
@@ -37,6 +38,6 @@ public class Weapon_1 : MonoBehaviour
     }
     void PrimaryFire()
     {
-        GameObject current = Instantiate(bullet, transform.position, cameraHolder.rotation);
+        GameObject current = Instantiate(bullet, bulletSpawn.position, cameraHolder.rotation);
     }
 }

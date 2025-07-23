@@ -38,6 +38,7 @@
   <ItemGroup>
      <Compile Include="Assets\Scripts\MoveCamera.cs" />
      <Compile Include="Assets\Scripts\Guns\Gun_test1.cs" />
+     <Compile Include="Assets\Scripts\Managers\GunManager.cs" />
      <Compile Include="Assets\Scripts\Managers\AddonManager.cs" />
      <Compile Include="Assets\Scripts\RocketBoost.cs" />
      <Compile Include="Assets\Scripts\PlayerMovement.cs" />

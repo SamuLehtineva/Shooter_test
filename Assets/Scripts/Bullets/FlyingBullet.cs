@@ -10,11 +10,12 @@ public class FlyingBullet : MonoBehaviour
 
     private float timer = 0f;
     private Vector3 lastPos;
+    private int layerMask = (1 << 7) | (1 << 8);
 
     void Update()
     {
-        //transform.position += transform.forward * speed * Time.deltaTime;
-        transform.position += transform.forward * speed * Time.fixedDeltaTime;
+        transform.position += transform.forward * speed * Time.deltaTime;
+        CheckHit();
     }
 
     void FixedUpdate()
@@ -26,7 +27,7 @@ public class FlyingBullet : MonoBehaviour
         {
             Destroy(this.gameObject);
         }
-        CheckHit();
+        //CheckHit();
     }
 
     void CheckHit()
@@ -34,13 +35,9 @@ public class FlyingBullet : MonoBehaviour
         RaycastHit hit;
 
         //if (Physics.Raycast(transform.position, transform.forward, out hit, 0.15f))
-        if (Physics.Raycast(transform.position + transform.forward * speed * Time.fixedDeltaTime, transform.forward, out hit, 0.15f))
+        if (Physics.Raycast(transform.position + transform.forward * speed * Time.fixedDeltaTime, transform.forward, out hit, 0.12f, ~layerMask))
         {
-            Debug.Log(hit);
-            if (hit.transform.gameObject.layer == 6)
-            {
-                Destroy(this.gameObject);
-            }
+            Destroy(this.gameObject);
         }
     }
 }

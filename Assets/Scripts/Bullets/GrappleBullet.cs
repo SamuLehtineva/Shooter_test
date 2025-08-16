@@ -2,26 +2,17 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class FlyingBullet : MonoBehaviour
+public class GrappleBullet : MonoBehaviour
 {
-    public float speed = 10;
-    public float damage = 10;
-    public float lifeTime = 5;
-
-    private float timer = 0f;
-    private Vector3 lastPos;
-    private int layerMask = (1 << 7) | (1 << 8);
+    public float speed;
+    public LayerMask layerMask;
+    [HideInInspector]
+    public Grappling grappling;
 
     void Update()
     {
         transform.position += transform.forward * speed * Time.deltaTime;
         CheckHit();
-
-        timer += Time.deltaTime;
-        if (timer > lifeTime)
-        {
-            Destroy(this.gameObject);
-        }
     }
 
     void CheckHit()
@@ -29,6 +20,8 @@ public class FlyingBullet : MonoBehaviour
         RaycastHit hit;
         if (Physics.Raycast(transform.position + transform.forward * speed * Time.deltaTime, transform.forward, out hit, 0.12f, ~layerMask))
         {
+            Debug.Log("Bullet: " + hit.point);
+            grappling.GrappeHookHit(hit.point);
             Destroy(this.gameObject);
         }
     }

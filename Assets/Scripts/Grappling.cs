@@ -13,6 +13,9 @@ public class Grappling : MonoBehaviour
     public InputManager input;
     public PlayerMovement pm;
     public Rigidbody rigid;
+    public GameObject grappleHook;
+    public PlayerLook playerLook;
+    private GameObject current;
 
     [Header("Grappling")]
     public float maxGrappleDistance;
@@ -30,8 +33,6 @@ public class Grappling : MonoBehaviour
     {
         input.playerActions.Grapple.Enable();
         input.playerActions.Grapple.performed += StartGrapple;
-
-        pm = GetComponent<PlayerMovement>();
     }
 
     void FixedUpdate()
@@ -52,12 +53,16 @@ public class Grappling : MonoBehaviour
         if (grappling)
         {
             lr.SetPosition(0, gunTip.position);
+            if (current != null)
+            {
+                lr.SetPosition(1, current.transform.position);
+            }
         }
     }
 
     void StartGrapple(InputAction.CallbackContext context)
     {
-        if (grappleTimer! > 0)
+        if (grappleTimer > 0)
         {
             return;
         }
@@ -65,20 +70,35 @@ public class Grappling : MonoBehaviour
         grappling = true;
         lr.enabled = true;
 
-        RaycastHit hit;
+        current = Instantiate(grappleHook, gunTip.position, cam.rotation);
+        current.transform.LookAt(playerLook.GetTarget());
+        current.GetComponent<GrappleBullet>().grappling = this;
+
+        /*RaycastHit hit;
         if (Physics.Raycast(cam.position, cam.forward, out hit, maxGrappleDistance, grappleSurface))
         {
             grapplePoint = hit.point;
             pulling = true;
+            rigid.velocity = Vector3.zero;
+            Debug.Log("Grapple: " + grapplePoint);
         }
         else
         {
             grapplePoint = cam.position + cam.forward * maxGrappleDistance;
             StopGrapple();
         }
-
         
         lr.SetPosition(1, grapplePoint);
+        */
+    }
+
+    public void GrappeHookHit(Vector3 hitPoint)
+    {
+        Debug.Log("HIt");
+        grapplePoint = hitPoint;
+        pulling = true;
+        rigid.velocity = Vector3.zero;
+        pm.isGrappling = true;
     }
 
     void GrapplePull()
@@ -98,10 +118,12 @@ public class Grappling : MonoBehaviour
         grappleTimer = grappleCooldown;
         lr.enabled = false;
         pulling = false;
+        pm.isGrappling = false;
     }
 
     private void OnDisable()
     {
-
+        input.playerActions.Grapple.performed -= StartGrapple;
+        input.playerActions.Grapple.Disable();
     }
 }

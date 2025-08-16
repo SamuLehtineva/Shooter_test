@@ -48,10 +48,19 @@ public class PlayerLook : MonoBehaviour
         camHolder.rotation = Quaternion.Euler(xRotation, yRotation, 0);
         orientation.rotation = Quaternion.Euler(0, yRotation, 0);
     }
+    
+    public Vector3 GetTarget()
+	{
+        RaycastHit hit;
+        int layerMask = (1 << 3) | (1 << 7);
+        Physics.Raycast(transform.position, transform.forward, out hit, 150f, ~layerMask);
+        Debug.DrawRay(transform.position, transform.forward, Color.red, 10f);
+        return hit.point;
+	}
 
     public void DoFov(float endValue)
     {
-       GetComponent<Camera>().DOFieldOfView(endValue, 0.25f);
+        GetComponent<Camera>().DOFieldOfView(endValue, 0.25f);
     }
 
     public void DoTilt(float zTilt)

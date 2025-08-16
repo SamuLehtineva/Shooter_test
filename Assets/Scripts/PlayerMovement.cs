@@ -68,6 +68,8 @@ public class PlayerMovement : MonoBehaviour
 
     public bool isWallRunning;
     public bool isBoosting;
+    public bool isGrappling;
+    public bool momentum;
 
     public MovementState state;
     public enum MovementState
@@ -80,8 +82,6 @@ public class PlayerMovement : MonoBehaviour
         walljump,
         boosting
     }
-
-    public bool momentum;
 
     void Awake()
     {
@@ -108,7 +108,7 @@ public class PlayerMovement : MonoBehaviour
 
     void FixedUpdate() {
         isGrounded = Physics.Raycast(transform.position, Vector3.down, playerHeight * 0.5f + 0.2f, groundMask);
-        if (isGrounded)
+        if (isGrounded && !isGrappling)
         {
             rigid.drag = groundDrag;
             ResetDoubleJump();
@@ -125,10 +125,14 @@ public class PlayerMovement : MonoBehaviour
         
         DashMove();
         DashCooldown();
-        if (!isBoosting)
+        if (!isBoosting && !isGrappling)
         {
             SpeedControl();
             MovePlayer();
+        }
+        else
+        {
+            rigid.useGravity = false;
         }
         if (sliding)
         {
@@ -220,7 +224,7 @@ public class PlayerMovement : MonoBehaviour
             rigid.AddForce(moveDirection.normalized * moveSpeed * 10f * airMultiplier, ForceMode.Force);
         }
 
-        if (OnSlope() || isWallRunning || isBoosting)
+        if (OnSlope() || isWallRunning || isBoosting || isGrappling)
         {
             rigid.useGravity = false;
         }

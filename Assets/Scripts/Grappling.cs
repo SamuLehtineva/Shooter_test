@@ -67,29 +67,20 @@ public class Grappling : MonoBehaviour
             return;
         }
 
-        grappling = true;
-        lr.enabled = true;
-
-        current = Instantiate(grappleHook, gunTip.position, cam.rotation);
-        current.transform.LookAt(playerLook.GetTarget());
-        current.GetComponent<GrappleBullet>().grappling = this;
-
-        /*RaycastHit hit;
-        if (Physics.Raycast(cam.position, cam.forward, out hit, maxGrappleDistance, grappleSurface))
+        if (grappling)
         {
-            grapplePoint = hit.point;
-            pulling = true;
-            rigid.velocity = Vector3.zero;
-            Debug.Log("Grapple: " + grapplePoint);
+            StopGrapple();
         }
         else
         {
-            grapplePoint = cam.position + cam.forward * maxGrappleDistance;
-            StopGrapple();
+            grappling = true;
+            lr.enabled = true;
+
+            current = Instantiate(grappleHook, gunTip.position, cam.rotation);
+            current.transform.LookAt(playerLook.GetTarget());
+            current.GetComponent<GrappleBullet>().grappling = this;
         }
-        
-        lr.SetPosition(1, grapplePoint);
-        */
+
     }
 
     public void GrappeHookHit(Vector3 hitPoint)
@@ -98,6 +89,7 @@ public class Grappling : MonoBehaviour
         grapplePoint = hitPoint;
         pulling = true;
         rigid.velocity = Vector3.zero;
+        rigid.AddForce(grappleDir * grapplePullSpeed, ForceMode.Force);
         pm.isGrappling = true;
     }
 
@@ -105,6 +97,7 @@ public class Grappling : MonoBehaviour
     {
         grappleDir = (grapplePoint - transform.position).normalized;
         rigid.AddForce(grappleDir * grapplePullSpeed, ForceMode.Force);
+        Debug.Log(rigid.velocity);
         if (Vector3.Distance(transform.position, grapplePoint) <= stopDistance)
         {
             StopGrapple();

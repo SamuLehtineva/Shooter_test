@@ -105,7 +105,7 @@ public class Grappling : MonoBehaviour
 
     }
 
-    void StopGrapple()
+    public void StopGrapple()
     {
         grappling = false;
         grappleTimer = grappleCooldown;

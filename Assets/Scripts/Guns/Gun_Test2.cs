@@ -2,12 +2,14 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Gun_test1 : MonoBehaviour
+public class Gun_Test2 : MonoBehaviour
 {
-    public GameObject bullet;
     public Transform cameraHolder;
     public Transform bulletSpawn;
+    public TrailRenderer trail;
     public float fireDelay;
+    public float maxRange;
+    public LayerMask mask;
 
     private float timer;
     private PlayerInput input;
@@ -36,9 +38,11 @@ public class Gun_test1 : MonoBehaviour
             PrimaryFire();
         }
     }
-    
+
     void PrimaryFire()
     {
-        GameObject current = Instantiate(bullet, bulletSpawn.position, cameraHolder.rotation);
+        //GameObject current = Instantiate(bullet, bulletSpawn.position, cameraHolder.rotation);
+        //RaycastHit hit = Physics.Raycast(bulletSpawn.position, cameraHolder.forward, maxRange);
+
     }
 }

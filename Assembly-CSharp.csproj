@@ -51,6 +51,7 @@
      <Compile Include="Assets\Scripts\Bullets\BouncingBullet.cs" />
      <Compile Include="Assets\Scripts\Grappling.cs" />
      <Compile Include="Assets\Scripts\UIBar.cs" />
+     <Compile Include="Assets\Scripts\Guns\Gun_Test2.cs" />
      <Compile Include="Assets\Scripts\MomentumMarker.cs" />
      <Compile Include="Assets\Scripts\Bullets\FlyingBullet.cs" />
      <Compile Include="Assets\Scripts\Sliding.cs" />

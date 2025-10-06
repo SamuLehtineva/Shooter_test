@@ -6,12 +6,13 @@ public class Gun_Test2 : MonoBehaviour
 {
     public Transform cameraHolder;
     public Transform bulletSpawn;
-    public TrailRenderer trail;
     public float fireDelay;
     public float maxRange;
+    public float bulletSpead = 0.1f;
     public LayerMask mask;
 
     private float timer;
+    private float lastShotTime;
     private PlayerInput input;
     private PlayerMovement pm;
 
@@ -43,6 +44,10 @@ public class Gun_Test2 : MonoBehaviour
     {
         //GameObject current = Instantiate(bullet, bulletSpawn.position, cameraHolder.rotation);
         //RaycastHit hit = Physics.Raycast(bulletSpawn.position, cameraHolder.forward, maxRange);
-
+        if (Physics.Raycast(bulletSpawn.position, cameraHolder.forward + new Vector3(0.4f, 0), out RaycastHit hit, maxRange, mask))
+        {
+            Debug.DrawLine(bulletSpawn.position, hit.point, Color.green, 3);
+            Debug.Log(hit);
+        }
     }
 }

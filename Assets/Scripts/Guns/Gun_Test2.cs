@@ -8,7 +8,8 @@ public class Gun_Test2 : MonoBehaviour
     public Transform bulletSpawn;
     public float fireDelay;
     public float maxRange;
-    public float bulletSpead = 0.1f;
+    public float bulletSpread = 0.5f;
+    public int bulletCount = 5;
     public LayerMask mask;
 
     private float timer;
@@ -42,12 +43,26 @@ public class Gun_Test2 : MonoBehaviour
 
     void PrimaryFire()
     {
-        //GameObject current = Instantiate(bullet, bulletSpawn.position, cameraHolder.rotation);
-        //RaycastHit hit = Physics.Raycast(bulletSpawn.position, cameraHolder.forward, maxRange);
-        if (Physics.Raycast(bulletSpawn.position, cameraHolder.forward + new Vector3(0.4f, 0), out RaycastHit hit, maxRange, mask))
+        int count = 0;
+        while (count < bulletCount)
         {
-            Debug.DrawLine(bulletSpawn.position, hit.point, Color.green, 3);
-            Debug.Log(hit);
+            if (Physics.Raycast(bulletSpawn.position, GetRandomDirection(), out RaycastHit hit, maxRange, mask))
+            {
+                Debug.DrawLine(bulletSpawn.position, hit.point, Color.green, 3);
+            }
+            count++;
         }
+
+        
+    }
+
+    Vector3 GetRandomDirection()
+    {
+        Vector3 point = Random.insideUnitCircle * bulletSpread;
+        point.z = 1;
+        Vector3 direction = (point - Vector3.zero).normalized;
+        direction = cameraHolder.rotation * direction;
+        Debug.Log(direction);
+        return direction;
     }
 }

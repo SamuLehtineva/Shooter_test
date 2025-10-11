@@ -10,6 +10,7 @@ public class Gun_Test2 : MonoBehaviour
     public float maxRange;
     public float bulletSpread = 0.5f;
     public int bulletCount = 5;
+    public ParticleSystem ImpactParticles;
     public LayerMask mask;
 
     private float timer;
@@ -49,6 +50,7 @@ public class Gun_Test2 : MonoBehaviour
             if (Physics.Raycast(bulletSpawn.position, GetRandomDirection(), out RaycastHit hit, maxRange, mask))
             {
                 Debug.DrawLine(bulletSpawn.position, hit.point, Color.green, 3);
+                Instantiate(ImpactParticles, hit.point, Quaternion.LookRotation(hit.normal));
             }
             count++;
         }

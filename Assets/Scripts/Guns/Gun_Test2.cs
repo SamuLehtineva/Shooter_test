@@ -10,6 +10,7 @@ public class Gun_Test2 : MonoBehaviour
     public float maxRange;
     public float bulletSpread = 0.5f;
     public int bulletCount = 5;
+    public int damage = 2;
     public ParticleSystem ImpactParticles;
     public LayerMask mask;
 
@@ -51,6 +52,11 @@ public class Gun_Test2 : MonoBehaviour
             {
                 Debug.DrawLine(bulletSpawn.position, hit.point, Color.green, 3);
                 Instantiate(ImpactParticles, hit.point, Quaternion.LookRotation(hit.normal));
+                EnemyHealth enemy = hit.transform.gameObject.GetComponent<EnemyHealth>();
+                if (enemy != null)
+                {
+                    enemy.Damage(damage);
+                }
             }
             count++;
         }

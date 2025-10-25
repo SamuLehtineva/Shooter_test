@@ -44,6 +44,7 @@
      <Compile Include="Assets\Scripts\Input\PlayerInput.cs" />
      <Compile Include="Assets\UnityTechnologies\ParticlePack\Shared\Ramps\Runtime\RampAsset.cs" />
      <Compile Include="Assets\UnityTechnologies\ParticlePack\Shared\Scripts\SimpleCameraController.cs" />
+     <Compile Include="Assets\Scripts\Enemy\TestDummy.cs" />
      <Compile Include="Assets\Scripts\Bullets\FlyingBullet.cs" />
      <Compile Include="Assets\Scripts\Sliding.cs" />
      <Compile Include="Assets\UnityTechnologies\ParticlePack\Shared\Scripts\SimpleCharacterMotor.cs" />
@@ -62,6 +63,7 @@
      <Compile Include="Assets\Scripts\Guns\Gun_Test2.cs" />
      <Compile Include="Assets\Scripts\MomentumMarker.cs" />
      <Compile Include="Assets\UnityTechnologies\ParticlePack\EffectExamples\Misc Effects\Scripts\SpawnEffect.cs" />
+     <Compile Include="Assets\Scripts\Enemy\EnemyHealth.cs" />
      <None Include="Assets\TextMesh Pro\Shaders\TMPro.cginc" />
      <None Include="Assets\TextMesh Pro\Shaders\TMP_SDF-Mobile Overlay.shader" />
      <None Include="Assets\TextMesh Pro\Shaders\TMP_Bitmap.shader" />

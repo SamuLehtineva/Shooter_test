@@ -66,11 +66,12 @@ public class PlayerMovement : MonoBehaviour
 
     public TextMeshProUGUI speedText;
     public TextMeshProUGUI desiredText;
+    public TextMeshProUGUI momentumText;
 
     public bool isWallRunning;
     public bool isBoosting;
     public bool isGrappling;
-    public bool momentum;
+    public int momentum;
 
     public MovementState state;
     public enum MovementState
@@ -115,7 +116,7 @@ public class PlayerMovement : MonoBehaviour
             ResetDoubleJump();
             if (!sliding)
             {
-                momentum = false;
+                //momentum = false;
             }
         }
         else
@@ -291,27 +292,28 @@ public class PlayerMovement : MonoBehaviour
             grappling.StopGrapple();
         }
         if (canJump && isGrounded)
+        {
+            rigid.velocity = new Vector3(rigid.velocity.x, 0, rigid.velocity.z);
+            rigid.AddForce(transform.up * jumpForce, ForceMode.Impulse);
+            if (sliding)
             {
-                rigid.velocity = new Vector3(rigid.velocity.x, 0, rigid.velocity.z);
-                rigid.AddForce(transform.up * jumpForce, ForceMode.Impulse);
-                if (sliding)
-                {
-                    rigid.AddForce(transform.forward * 250f);
-                }
-                canJump = false;
-                Invoke(nameof(ResetJump), jumpCooldown);
-                /*if (sliding)
-                {
-                    StopSlide();
-                }*/
+                rigid.AddForce(transform.forward * 250f);
+                momentum += 20;
+            }
+            canJump = false;
+            Invoke(nameof(ResetJump), jumpCooldown);
+            /*if (sliding)
+            {
+                StopSlide();
+            }*/
 
-            }
-            else if (canDoubleJump && !isWallRunning)
-            {
-                rigid.velocity = new Vector3(rigid.velocity.x, jumpForce, rigid.velocity.z);
-                canDoubleJump = false;
-                Invoke(nameof(ResetJump), jumpCooldown);
-            }
+        }
+        else if (canDoubleJump && !isWallRunning)
+        {
+            rigid.velocity = new Vector3(rigid.velocity.x, jumpForce, rigid.velocity.z);
+            canDoubleJump = false;
+            Invoke(nameof(ResetJump), jumpCooldown);
+        }
     }
 
     void ResetJump()
@@ -440,6 +442,7 @@ public class PlayerMovement : MonoBehaviour
     {
         speedText.text = "Speed: " + rigid.velocity.magnitude;
         desiredText.text = "Desired Speed: " + desiredMoveSpeed;
+        momentumText.text = "Momentum: " + momentum;
     }
 
     private void OnEnable()

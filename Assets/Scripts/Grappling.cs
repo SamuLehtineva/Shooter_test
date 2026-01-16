@@ -77,7 +77,10 @@ public class Grappling : MonoBehaviour
             lr.enabled = true;
 
             current = Instantiate(grappleHook, gunTip.position, cam.rotation);
-            current.transform.LookAt(playerLook.GetTarget());
+            if (playerLook.GetTarget() != Vector3.zero)
+            {
+                current.transform.LookAt(playerLook.GetTarget());    
+            }
             current.GetComponent<GrappleBullet>().grappling = this;
         }
 
@@ -97,7 +100,7 @@ public class Grappling : MonoBehaviour
     {
         grappleDir = (grapplePoint - transform.position).normalized;
         rigid.AddForce(grappleDir * grapplePullSpeed, ForceMode.Force);
-        Debug.Log(rigid.velocity);
+        //Debug.Log(rigid.velocity);
         if (Vector3.Distance(transform.position, grapplePoint) <= stopDistance)
         {
             StopGrapple();
@@ -112,6 +115,7 @@ public class Grappling : MonoBehaviour
         lr.enabled = false;
         pulling = false;
         pm.isGrappling = false;
+        Destroy(current.gameObject);
     }
 
     private void OnDisable()

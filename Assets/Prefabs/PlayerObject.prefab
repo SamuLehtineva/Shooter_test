@@ -290,7 +290,7 @@ Camera:
   m_Depth: 1
   m_CullingMask:
     serializedVersion: 2
-    m_Bits: 503
+    m_Bits: 1527
   m_RenderingPath: -1
   m_TargetTexture: {fileID: 0}
   m_TargetDisplay: 0
@@ -743,6 +743,10 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 4786972164310207417}
     - target: {fileID: 760260335, guid: 88b791e40fe68f24994d49637d61005a, type: 3}
+      propertyPath: mask.m_Bits
+      value: 1088
+      objectReference: {fileID: 0}
+    - target: {fileID: 760260335, guid: 88b791e40fe68f24994d49637d61005a, type: 3}
       propertyPath: cameraHolder
       value: 
       objectReference: {fileID: 4786972164310207417}
@@ -823,9 +827,33 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 0}
     - target: {fileID: 2292694230993138862, guid: 88b791e40fe68f24994d49637d61005a, type: 3}
+      propertyPath: flyPower
+      value: 25
+      objectReference: {fileID: 0}
+    - target: {fileID: 2292694230993138862, guid: 88b791e40fe68f24994d49637d61005a, type: 3}
+      propertyPath: boostPower
+      value: 30
+      objectReference: {fileID: 0}
+    - target: {fileID: 2292694230993138862, guid: 88b791e40fe68f24994d49637d61005a, type: 3}
+      propertyPath: flyPowerMax
+      value: 25
+      objectReference: {fileID: 0}
+    - target: {fileID: 2292694230993138862, guid: 88b791e40fe68f24994d49637d61005a, type: 3}
       propertyPath: cameraHolder
       value: 
       objectReference: {fileID: 4786972164310207417}
+    - target: {fileID: 2292694230993138862, guid: 88b791e40fe68f24994d49637d61005a, type: 3}
+      propertyPath: flyDrainRate
+      value: 25
+      objectReference: {fileID: 0}
+    - target: {fileID: 2292694230993138862, guid: 88b791e40fe68f24994d49637d61005a, type: 3}
+      propertyPath: boostDrainRate
+      value: 25
+      objectReference: {fileID: 0}
+    - target: {fileID: 2292694230993138862, guid: 88b791e40fe68f24994d49637d61005a, type: 3}
+      propertyPath: flyPowerIncrease
+      value: 25
+      objectReference: {fileID: 0}
     - target: {fileID: 2292694230993138863, guid: 88b791e40fe68f24994d49637d61005a, type: 3}
       propertyPath: cam
       value: 

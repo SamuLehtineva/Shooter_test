@@ -55,6 +55,7 @@ public class PlayerLook : MonoBehaviour
         int layerMask = (1 << 3) | (1 << 7);
         Physics.Raycast(transform.position, transform.forward, out hit, 150f, ~layerMask);
         Debug.DrawRay(transform.position, transform.forward, Color.red, 10f);
+        Debug.Log("Target:" + hit.point);
         return hit.point;
 	}
 

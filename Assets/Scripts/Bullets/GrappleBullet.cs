@@ -5,6 +5,7 @@ using UnityEngine;
 public class GrappleBullet : MonoBehaviour
 {
     public float speed;
+    public float lifeTime;
     public LayerMask layerMask;
     [HideInInspector]
     public Grappling grappling;
@@ -13,6 +14,12 @@ public class GrappleBullet : MonoBehaviour
     {
         transform.position += transform.forward * speed * Time.deltaTime;
         CheckHit();
+        lifeTime -= Time.deltaTime;
+        if (lifeTime <= 0f)
+        {
+            grappling.StopGrapple();
+            Destroy(this.gameObject);
+        }
     }
 
     void CheckHit()

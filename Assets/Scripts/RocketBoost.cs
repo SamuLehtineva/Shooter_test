@@ -7,7 +7,9 @@ public class RocketBoost : MonoBehaviour
 {
     [Header("RocketBoost")]
     public float maxFuel = 100;
-    public float flyPower;
+    private float flyPowerCurrent;
+    public float flyPowerMax;
+    public float flyPowerIncrease;
     public float flyDrainRate;
     public float boostPower;
     public float boostDrainRate;
@@ -15,6 +17,7 @@ public class RocketBoost : MonoBehaviour
     private float currentFuel;
     private float flyInput;
     private float boostInput;
+    private bool isDoing = false;
 
     [Header("References")]
     public Transform cameraHolder;
@@ -49,18 +52,67 @@ public class RocketBoost : MonoBehaviour
 
         if (flyInput > 0 && currentFuel > 0)
         {
-            currentFuel -= flyDrainRate * Time.deltaTime;
+            if (!isDoing)
+            {
+                isDoing = true;
+            }
+            else
+            {
+                currentFuel -= flyDrainRate * Time.deltaTime;
+            }
+
             FlyMovement();
+
+            if (flyPowerCurrent < flyPowerMax)
+            {
+                flyPowerCurrent += flyPowerIncrease * Time.fixedDeltaTime;
+            }
+            if (flyPowerCurrent > flyPowerMax)
+            {
+                flyPowerCurrent = flyPowerMax;
+            }
+
         }
         else if (boostInput > 0 && currentFuel > 0)
         {
-            currentFuel -= boostDrainRate * Time.deltaTime;
+            if (!isDoing)
+            {
+                currentFuel -= 10;
+                isDoing = true;
+            }
+            else
+            {
+                currentFuel -= boostDrainRate * Time.deltaTime;
+            }
+
             pm.isBoosting = true;
             BoostMovement();
+
+            if (flyPowerCurrent < flyPowerMax)
+            {
+                flyPowerCurrent += flyPowerIncrease * Time.fixedDeltaTime;
+            }
+            if (flyPowerCurrent > flyPowerMax)
+            {
+                flyPowerCurrent = flyPowerMax;
+            }
+
         }
         else
         {
+            isDoing = false;
+            flyPowerCurrent = 0;
             pm.isBoosting = false;
+
+            if (flyPowerCurrent > 0)
+            {
+                flyPowerCurrent -= 7 * Time.fixedDeltaTime;
+            }
+            
+            if (flyPowerCurrent < 0)
+            {
+                flyPowerCurrent = 0;
+            }
         }
 
         ReFuel();
@@ -76,8 +128,14 @@ public class RocketBoost : MonoBehaviour
 
     void FlyMovement()
     {
-        rigid.velocity = new Vector3(rigid.velocity.x, flyPower, rigid.velocity.z);
-        
+        if (rigid.velocity.y < 0)
+        {
+            rigid.velocity = new Vector3(rigid.velocity.x, flyPowerCurrent, rigid.velocity.z);
+        }
+        else
+        {
+            rigid.velocity = new Vector3(rigid.velocity.x, flyPowerCurrent, rigid.velocity.z);
+        }
     }
 
     void BoostMovement()

@@ -11,13 +11,13 @@ public class MomentumMarker : MonoBehaviour
 
     void Update()
     {
-        if (pm.momentum)
+        /*if (pm.momentum)
         {
             img.color = Color.green;
         }
         else
         {
             img.color = Color.red;
-        }
+        }*/
     }
 }

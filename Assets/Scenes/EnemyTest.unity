@@ -304,10 +304,6 @@ PrefabInstance:
       propertyPath: input
       value: 
       objectReference: {fileID: 1805468538}
-    - target: {fileID: 4786972163997906848, guid: 0ec5902b1db080a4ea0446cd2f440eed, type: 3}
-      propertyPath: m_CullingMask.m_Bits
-      value: 1527
-      objectReference: {fileID: 0}
     - target: {fileID: 4786972165607323844, guid: 0ec5902b1db080a4ea0446cd2f440eed, type: 3}
       propertyPath: speedText
       value: 
@@ -328,10 +324,6 @@ PrefabInstance:
       propertyPath: input
       value: 
       objectReference: {fileID: 1805468538}
-    - target: {fileID: 6755386881850649225, guid: 0ec5902b1db080a4ea0446cd2f440eed, type: 3}
-      propertyPath: mask.m_Bits
-      value: 1088
-      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 0ec5902b1db080a4ea0446cd2f440eed, type: 3}
 --- !u!1 &655747714

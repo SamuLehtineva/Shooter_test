@@ -14,7 +14,6 @@ public class PlayerMovement : MonoBehaviour
     public float walkSpeed;
     public float slideSpeed;
     public float wallSpeed;
-    public float boostSpeed;
     public float groundDrag;
     public float speedIncreaseMultiplier;
     public float slopeIncreaseMultiplier;
@@ -35,19 +34,11 @@ public class PlayerMovement : MonoBehaviour
     public float slideCooldown;
     public float slideYScale;
     private float slideTimer;
-    private bool sliding;
+    public bool sliding;
     private float startYScale;
     private float slideInput;
     private bool canSlide;
     private Vector3 slideDirection;
-
-    [Header("Dash")]
-    public float dashSpeed;
-    public float dashDuration;
-    public float dashCooldown = 1.5f;
-    private float dashTimer;
-    private float dashCooldownTimer;
-    private Vector3 dashDirection;
     
     [Header("Ground Check")]
     public float playerHeight;
@@ -59,11 +50,13 @@ public class PlayerMovement : MonoBehaviour
     RaycastHit slopeHit;
     
     private Vector2 moveInput;
-    private Vector3 moveDirection;
+    [HideInInspector]
+    public Vector3 moveDirection;
     public PlayerInput playerInput;
 
     private Rigidbody rigid;
 
+    public TextMeshProUGUI velocityText;
     public TextMeshProUGUI speedText;
     public TextMeshProUGUI desiredText;
     public TextMeshProUGUI momentumText;
@@ -71,7 +64,7 @@ public class PlayerMovement : MonoBehaviour
     public bool isWallRunning;
     public bool isBoosting;
     public bool isGrappling;
-    public int momentum;
+    public float momentum;
 
     public MovementState state;
     public enum MovementState
@@ -99,16 +92,16 @@ public class PlayerMovement : MonoBehaviour
         canSlide = true;
 
         startYScale = transform.localScale.y;
-        dashCooldownTimer = dashCooldown;
     }
 
     void Update()
     {
-        MyInput();
         UpdateText();
     }
 
     void FixedUpdate() {
+        MyInput();
+
         isGrounded = Physics.Raycast(transform.position, Vector3.down, playerHeight * 0.5f + 0.2f, groundMask);
         if (isGrounded && !isGrappling)
         {
@@ -123,10 +116,10 @@ public class PlayerMovement : MonoBehaviour
         {
             rigid.drag = 0;
         }
+
         StateHandler();
-        
-        DashMove();
-        DashCooldown();
+        CheckMomentum();
+
         if (!isBoosting && !isGrappling)
         {
             SpeedControl();
@@ -141,6 +134,27 @@ public class PlayerMovement : MonoBehaviour
             SlidingMovement();
         }
         
+    }
+
+    void CheckMomentum()
+    {
+        if (state == MovementState.walking)
+        {
+            momentum = 0;
+        }
+        else if (state == MovementState.air)
+        {
+            momentum -= 10 * Time.fixedDeltaTime;
+        }
+        else if (state == MovementState.wallrunning)
+        {
+            momentum -= 5 * Time.fixedDeltaTime;
+        }
+
+        if (momentum < 0)
+        {
+            momentum = 0;
+        }
     }
 
     void StateHandler()
@@ -327,7 +341,7 @@ public class PlayerMovement : MonoBehaviour
     }
 
 
-    bool OnSlope()
+    public bool OnSlope()
     {
         Debug.DrawRay(transform.position, Vector3.down * (2 * 0.5f + 0.2f), Color.red);
         if (Physics.Raycast(transform.position, Vector3.down, out slopeHit, playerHeight * 0.5f + 0.2f))
@@ -339,52 +353,9 @@ public class PlayerMovement : MonoBehaviour
         return false;
     }
 
-    Vector3 GetSlopeMoveDirection()
+    public Vector3 GetSlopeMoveDirection()
     {
         return Vector3.ProjectOnPlane(moveDirection, slopeHit.normal).normalized;
-    }
-
-    void StartDash(InputAction.CallbackContext context)
-    {
-        if (dashCooldownTimer >= dashCooldown)
-        {
-            if (OnSlope())
-            {
-                dashDirection = GetSlopeMoveDirection();
-            }
-            else
-            {
-                dashDirection = moveDirection;
-            }
-            dashTimer = 0f;
-            dashCooldownTimer = 0f;
-        }
-    }
-
-    void DashMove()
-    {
-        if (dashTimer < dashDuration)
-        {
-            rigid.drag = 0;
-            rigid.AddForce(dashDirection.normalized * dashSpeed * 10f, ForceMode.Force);
-            rigid.velocity = new Vector3(rigid.velocity.x, 0, rigid.velocity.z);
-            dashTimer += Time.fixedDeltaTime;
-            if (OnSlope() && canJump)
-            {
-                if (GetSlopeMoveDirection().y < 0.1f)
-				{
-                    rigid.AddForce(Vector3.down * 120f, ForceMode.Force);
-                }
-            }
-        }
-    }
-
-    void DashCooldown()
-    {
-        if (dashCooldownTimer < dashCooldown)
-        {
-            dashCooldownTimer += Time.deltaTime;
-        }
     }
 
     void StartSlide()
@@ -440,7 +411,9 @@ public class PlayerMovement : MonoBehaviour
 
     void UpdateText()
     {
-        speedText.text = "Speed: " + rigid.velocity.magnitude;
+        //speedText.text = "Speed: " + rigid.velocity.magnitude;
+        velocityText.text = "Velocity: " + new Vector2(rigid.velocity.x, rigid.velocity.z).magnitude;
+        speedText.text = "Speed: " + moveSpeed;
         desiredText.text = "Desired Speed: " + desiredMoveSpeed;
         momentumText.text = "Momentum: " + momentum;
     }
@@ -452,9 +425,6 @@ public class PlayerMovement : MonoBehaviour
         playerInput.Player.Jump.performed += Jump;
         playerInput.Player.Jump.Enable();
 
-        playerInput.Player.Dash.Enable();
-        playerInput.Player.Dash.performed += StartDash;
-
         playerInput.Player.Slide.Enable();
     }
 
@@ -464,9 +434,6 @@ public class PlayerMovement : MonoBehaviour
 
         playerInput.Player.Jump.performed -= Jump;
         playerInput.Player.Jump.Disable();
-
-        playerInput.Player.Dash.Disable();
-        playerInput.Player.Dash.performed -= StartDash;
 
         playerInput.Player.Slide.Disable();
     }

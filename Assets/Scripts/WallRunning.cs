@@ -169,6 +169,7 @@ public class WallRunning : MonoBehaviour
 
             rigid.velocity = new Vector3(rigid.velocity.x, 0f, rigid.velocity.z);
             rigid.AddForce(forceToApply, ForceMode.Impulse);
+            pm.momentum += 20;
         }
     }
 

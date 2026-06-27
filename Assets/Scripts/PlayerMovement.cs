@@ -28,17 +28,7 @@ public class PlayerMovement : MonoBehaviour
     private bool canJump;
     private bool canDoubleJump;
 
-    [Header("Sliding")]
-    public float maxSlideTime;
-    public float slideForce;
-    public float slideCooldown;
-    public float slideYScale;
-    private float slideTimer;
     public bool sliding;
-    private float startYScale;
-    private float slideInput;
-    private bool canSlide;
-    private Vector3 slideDirection;
     
     [Header("Ground Check")]
     public float playerHeight;
@@ -89,9 +79,6 @@ public class PlayerMovement : MonoBehaviour
         rigid.freezeRotation = true;
 
         canJump = true;
-        canSlide = true;
-
-        startYScale = transform.localScale.y;
     }
 
     void Update()
@@ -198,16 +185,6 @@ public class PlayerMovement : MonoBehaviour
     void MyInput()
     {
         moveInput = playerInput.Player.Move.ReadValue<Vector2>();
-        slideInput = playerInput.Player.Slide.ReadValue<float>();
-
-        if (slideInput > 0 && !sliding && canSlide)
-        {
-            //StartSlide();
-        }
-        else if (slideInput == 0 && sliding)
-        {
-            //StopSlide();
-        }
     }
 
     void MovePlayer()
@@ -353,56 +330,6 @@ public class PlayerMovement : MonoBehaviour
         return Vector3.ProjectOnPlane(moveDirection, slopeHit.normal).normalized;
     }
 
-    void StartSlide()
-    {
-        sliding = true;
-        canSlide = false;
-
-        transform.localScale = new Vector3(transform.localScale.x, slideYScale, transform.localScale.z);
-        rigid.AddForce(Vector3.down * 5f, ForceMode.Impulse);
-
-        slideTimer = maxSlideTime;
-        slideDirection = moveDirection;
-    }
-
-    void SlidingMovement()
-    {
-        //Vector3 moveDirection = orientation.forward * moveInput.y + orientation.right * moveInput.x;
-        moveDirection = slideDirection;
-
-        if (!OnSlope() || rigid.velocity.y > -0.1f)
-        {
-            rigid.AddForce(moveDirection.normalized * slideForce, ForceMode.Force);
-            slideTimer -= Time.deltaTime;
-        }
-        else
-        {
-            rigid.AddForce(GetSlopeMoveDirection() * slideForce * 1.5f, ForceMode.Force);
-
-            if (GetSlopeMoveDirection().y < 0.1f)
-            {
-                rigid.AddForce(Vector3.down * 200f, ForceMode.Force);
-            }
-        }
-
-
-        if (slideTimer <= 0)
-        {
-            StopSlide();
-        }
-    }
-
-    void StopSlide()
-    {
-        sliding = false;
-        transform.localScale = new Vector3(transform.localScale.x, startYScale, transform.localScale.z);
-        Invoke(nameof(ResetSlide), slideCooldown);
-    }
-
-    void ResetSlide()
-    {
-        canSlide = true;
-    }
 
     void UpdateText()
     {

@@ -6,11 +6,10 @@ using UnityEngine.InputSystem;
 public class Sliding : MonoBehaviour
 {
     [Header("References")]
-    public Transform orientation;
-    public Transform playerObj;
     private Rigidbody rigid;
     private PlayerMovement playerMovement;
     private PlayerInput playerInput;
+    private Vector3 slideDirection;
 
     [Header("Sliding")]
     public float maxSlideTime;
@@ -33,16 +32,12 @@ public class Sliding : MonoBehaviour
         rigid = GetComponent<Rigidbody>();
         playerMovement = GetComponent<PlayerMovement>();
 
-        startYScale = playerObj.localScale.y;
-    }
-
-    void Update()
-    {
-        moveInput = playerInput.Player.Move.ReadValue<Vector2>();
+        startYScale = transform.localScale.y;
     }
 
     void FixedUpdate()
     {
+        moveInput = playerInput.Player.Move.ReadValue<Vector2>();
         if (sliding)
         {
             SlidingMovement();
@@ -51,23 +46,34 @@ public class Sliding : MonoBehaviour
 
     void StartSlide(InputAction.CallbackContext context)
     {
-        Debug.Log("Sliding");
+        Debug.Log("Started Sliding");
         sliding = true;
 
-        playerObj.localScale = new Vector3(playerObj.localScale.x, slideYScale, playerObj.localScale.z);
+        transform.localScale = new Vector3(transform.localScale.x, slideYScale, transform.localScale.z);
         rigid.AddForce(Vector3.down * 5f, ForceMode.Impulse);
         
         slideTimer = maxSlideTime;
+        slideDirection = playerMovement.moveDirection;
+        
     }
 
     void SlidingMovement()
-    {
-        Vector3 moveDirection = orientation.forward * moveInput.y + orientation.right * moveInput.x;
+    {   
+        if(!playerMovement.OnSlope() || rigid.velocity.y > -0.1f)
+        {
+            rigid.AddForce(slideDirection.normalized * slideForce, ForceMode.Force);
+            slideTimer -= Time.deltaTime;
+        }
+        else
+        {
+            rigid.AddForce(playerMovement.GetSlopeMoveDirection() * slideForce * 1.5f, ForceMode.Force);
+
+            if (playerMovement.GetSlopeMoveDirection().y < 0.1f)
+            {
+                rigid.AddForce(Vector3.down * 200f, ForceMode.Force);
+            }
+        }
         
-        rigid.AddForce(moveDirection.normalized * slideForce, ForceMode.Force);
-
-        slideTimer -= Time.deltaTime;
-
         if (slideTimer <= 0)
         {
             StopSlide(new InputAction.CallbackContext());
@@ -76,9 +82,12 @@ public class Sliding : MonoBehaviour
 
     void StopSlide(InputAction.CallbackContext context)
     {
-        Debug.Log("Stopped sliding");
-        sliding = false;
-        playerObj.localScale = new Vector3(playerObj.localScale.x, startYScale, playerObj.localScale.z);
+        if (sliding)
+        {
+            Debug.Log("Stopped sliding");
+            sliding = false;
+            transform.localScale = new Vector3(transform.localScale.x, startYScale, transform.localScale.z);
+        }
     }
 
 

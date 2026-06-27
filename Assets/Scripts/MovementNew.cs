@@ -3,8 +3,7 @@ using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
 using UnityEngine.InputSystem;
-
-public class PlayerMovement : MonoBehaviour
+public class MovementNew : MonoBehaviour
 {
     [Header("Misc")]
     public Transform orientation;
@@ -19,7 +18,6 @@ public class PlayerMovement : MonoBehaviour
     public float slopeIncreaseMultiplier;
     private float moveSpeed;
     private float desiredMoveSpeed;
-    private float lastDesiredMoveSpeed;
 
     [Header("Jumping")]
     public float jumpForce;
@@ -129,6 +127,11 @@ public class PlayerMovement : MonoBehaviour
         {
             rigid.useGravity = false;
         }
+        if (sliding)
+        {
+            SlidingMovement();
+        }
+        
     }
 
     void CheckMomentum()
@@ -182,17 +185,7 @@ public class PlayerMovement : MonoBehaviour
             state = MovementState.air;
         }
 
-
-        if (Mathf.Abs(desiredMoveSpeed - lastDesiredMoveSpeed) > 2f && moveSpeed != 0)
-        {
-            /*StopCoroutine(LerpMoveSpeed());
-            StartCoroutine(LerpMoveSpeed());*/
-        }
-        else if (isGrounded && !isWallRunning && !sliding)
-        {
-            moveSpeed = desiredMoveSpeed;
-        }
-        lastDesiredMoveSpeed = desiredMoveSpeed;
+        moveSpeed = desiredMoveSpeed;
     }
 
     void MyInput()
@@ -202,11 +195,11 @@ public class PlayerMovement : MonoBehaviour
 
         if (slideInput > 0 && !sliding && canSlide)
         {
-            //StartSlide();
+            StartSlide();
         }
         else if (slideInput == 0 && sliding)
         {
-            //StopSlide();
+            StopSlide();
         }
     }
 
@@ -265,33 +258,6 @@ public class PlayerMovement : MonoBehaviour
                 rigid.velocity = new Vector3(limitedVel.x, rigid.velocity.y, limitedVel.z);
             }
         }
-    }
-
-    private IEnumerator LerpMoveSpeed()
-    {
-        float time = 0;
-        float difference = Mathf.Abs(desiredMoveSpeed - moveSpeed);
-        float startValue = moveSpeed;
-
-        while (time < difference)
-        {
-            moveSpeed = Mathf.Lerp(startValue, desiredMoveSpeed, time / difference);
-
-            if (OnSlope())
-            {
-                float slopeAngle = Vector3.Angle(Vector3.up, slopeHit.normal);
-                float slopeAngleIncrease = 1 + (slopeAngle / 90f);
-
-                time += Time.deltaTime * speedIncreaseMultiplier * slopeIncreaseMultiplier * slopeAngleIncrease;
-            }
-            else
-            {
-                time += Time.deltaTime * speedIncreaseMultiplier;
-            }
-            yield return null;
-        }
-
-        moveSpeed = desiredMoveSpeed;
     }
 
     void Jump(InputAction.CallbackContext context)
@@ -420,7 +386,7 @@ public class PlayerMovement : MonoBehaviour
         playerInput.Player.Jump.performed += Jump;
         playerInput.Player.Jump.Enable();
 
-        //playerInput.Player.Slide.Enable();
+        playerInput.Player.Slide.Enable();
     }
 
     private void OnDisable()
@@ -430,6 +396,6 @@ public class PlayerMovement : MonoBehaviour
         playerInput.Player.Jump.performed -= Jump;
         playerInput.Player.Jump.Disable();
 
-        //playerInput.Player.Slide.Disable();
+        playerInput.Player.Slide.Disable();
     }
 }

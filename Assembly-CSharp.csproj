@@ -41,6 +41,7 @@
      <Compile Include="Assets\Scripts\Managers\AddonManager.cs" />
      <Compile Include="Assets\UnityTechnologies\ParticlePack\Shared\Scripts\ProximityActivate.cs" />
      <Compile Include="Assets\Scripts\PlayerLook.cs" />
+     <Compile Include="Assets\Scripts\MovementNew.cs" />
      <Compile Include="Assets\Scripts\Input\PlayerInput.cs" />
      <Compile Include="Assets\UnityTechnologies\ParticlePack\Shared\Ramps\Runtime\RampAsset.cs" />
      <Compile Include="Assets\UnityTechnologies\ParticlePack\Shared\Scripts\SimpleCameraController.cs" />

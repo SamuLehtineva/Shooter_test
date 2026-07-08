@@ -312,6 +312,14 @@ PrefabInstance:
       propertyPath: desiredText
       value: 
       objectReference: {fileID: 1475038765}
+    - target: {fileID: 4786972165607323844, guid: 0ec5902b1db080a4ea0446cd2f440eed, type: 3}
+      propertyPath: momentumText
+      value: 
+      objectReference: {fileID: 1016537525}
+    - target: {fileID: 4786972165607323844, guid: 0ec5902b1db080a4ea0446cd2f440eed, type: 3}
+      propertyPath: velocityText
+      value: 
+      objectReference: {fileID: 1016537526}
     - target: {fileID: 4786972165607323848, guid: 0ec5902b1db080a4ea0446cd2f440eed, type: 3}
       propertyPath: fuelBar
       value: 
@@ -552,6 +560,28 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 2f4860d94a3effd48857784c685a79d0, type: 3}
+--- !u!114 &1016537525 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 654707396, guid: 2f4860d94a3effd48857784c685a79d0, type: 3}
+  m_PrefabInstance: {fileID: 1016537524}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f4688fdb7df04437aeb418b961361dc5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &1016537526 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 1697038680, guid: 2f4860d94a3effd48857784c685a79d0, type: 3}
+  m_PrefabInstance: {fileID: 1016537524}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f4688fdb7df04437aeb418b961361dc5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &1104326096
 GameObject:
   m_ObjectHideFlags: 0

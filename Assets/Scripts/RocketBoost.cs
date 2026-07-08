@@ -17,6 +17,8 @@ public class RocketBoost : MonoBehaviour
 
     public float boostPower;
     public float boostDrainRate;
+    public float airJumpForce;
+    public float airJumpFuelDrain = 25f;
 
     [Header("Dash")]
     public float dashSpeed;
@@ -52,6 +54,7 @@ public class RocketBoost : MonoBehaviour
         input.Player.Boost.Enable();
         input.Player.Dash.Enable();
         input.Player.Dash.performed += StartDash;
+        input.Player.Jump.performed += AirJump;
 
         currentFuel = maxFuel;
         dashCooldownTimer = dashCooldown;
@@ -150,10 +153,30 @@ public class RocketBoost : MonoBehaviour
         }
     }
 
-    void DrainFuel(float fuelUsed)
+    public bool UseFuel(float fuelUsed)
     {
-        currentFuel -= fuelUsed;
-        reFuelDelayTimer = 0;
+        if(currentFuel >= fuelUsed)
+        {
+            currentFuel -= fuelUsed;
+            reFuelDelayTimer = 0;
+            return true;
+        }
+        else
+        {
+            return false;
+        }
+    }
+
+    public void AirJump(InputAction.CallbackContext context)
+    {
+        if (!pm.isGrounded && !pm.isGrappling)
+        {
+            if (UseFuel(airJumpFuelDrain))
+            {
+                rigid.velocity = new Vector3(rigid.velocity.x, airJumpForce, rigid.velocity.z);
+            }
+        }
+       
     }
 
     void FlyMovement()
@@ -176,7 +199,7 @@ public class RocketBoost : MonoBehaviour
 
     void StartDash(InputAction.CallbackContext context)
     {
-        if (dashCooldownTimer >= dashCooldown && currentFuel >= dashFuelDrain)
+        if (dashCooldownTimer >= dashCooldown && UseFuel(dashFuelDrain))
         {
             Debug.Log("Start");
             if (pm.OnSlope())
@@ -189,7 +212,6 @@ public class RocketBoost : MonoBehaviour
             } 
             dashTimer = 0f;
             dashCooldownTimer = 0f;
-            DrainFuel(dashFuelDrain);
         }
     }
 

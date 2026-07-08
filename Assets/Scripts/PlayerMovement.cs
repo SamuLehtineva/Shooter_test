@@ -27,8 +27,6 @@ public class PlayerMovement : MonoBehaviour
     public float airMultiplier;
     private bool canJump;
     private bool canDoubleJump;
-
-    public bool sliding;
     
     [Header("Ground Check")]
     public float playerHeight;
@@ -54,14 +52,14 @@ public class PlayerMovement : MonoBehaviour
     public bool isWallRunning;
     public bool isBoosting;
     public bool isGrappling;
-    public float momentum;
+    public bool isSliding;
 
     public MovementState state;
     public enum MovementState
     {
         walking,
         air,
-        sliding,
+        isSliding,
         slidejump,
         wallrunning,
         walljump,
@@ -94,7 +92,7 @@ public class PlayerMovement : MonoBehaviour
         {
             rigid.drag = groundDrag;
             ResetDoubleJump();
-            if (!sliding)
+            if (!isSliding)
             {
                 //momentum = false;
             }
@@ -105,7 +103,6 @@ public class PlayerMovement : MonoBehaviour
         }
 
         StateHandler();
-        CheckMomentum();
 
         if (!isBoosting && !isGrappling)
         {
@@ -118,27 +115,6 @@ public class PlayerMovement : MonoBehaviour
         }
     }
 
-    void CheckMomentum()
-    {
-        if (state == MovementState.walking)
-        {
-            momentum = 0;
-        }
-        else if (state == MovementState.air)
-        {
-            momentum -= 10 * Time.fixedDeltaTime;
-        }
-        else if (state == MovementState.wallrunning)
-        {
-            momentum -= 5 * Time.fixedDeltaTime;
-        }
-
-        if (momentum < 0)
-        {
-            momentum = 0;
-        }
-    }
-
     void StateHandler()
     {
         if (isWallRunning)
@@ -146,9 +122,9 @@ public class PlayerMovement : MonoBehaviour
             state = MovementState.wallrunning;
             desiredMoveSpeed = wallSpeed;
         }
-        else if (isGrounded && sliding)
+        else if (isGrounded && isSliding)
         {
-            state = MovementState.sliding;
+            state = MovementState.isSliding;
 
             if (OnSlope() && rigid.velocity.y < 0.1f)
             {
@@ -175,7 +151,7 @@ public class PlayerMovement : MonoBehaviour
             /*StopCoroutine(LerpMoveSpeed());
             StartCoroutine(LerpMoveSpeed());*/
         }
-        else if (isGrounded && !isWallRunning && !sliding)
+        else if (isGrounded && !isWallRunning && !isSliding)
         {
             moveSpeed = desiredMoveSpeed;
         }
@@ -244,33 +220,6 @@ public class PlayerMovement : MonoBehaviour
         }
     }
 
-    private IEnumerator LerpMoveSpeed()
-    {
-        float time = 0;
-        float difference = Mathf.Abs(desiredMoveSpeed - moveSpeed);
-        float startValue = moveSpeed;
-
-        while (time < difference)
-        {
-            moveSpeed = Mathf.Lerp(startValue, desiredMoveSpeed, time / difference);
-
-            if (OnSlope())
-            {
-                float slopeAngle = Vector3.Angle(Vector3.up, slopeHit.normal);
-                float slopeAngleIncrease = 1 + (slopeAngle / 90f);
-
-                time += Time.deltaTime * speedIncreaseMultiplier * slopeIncreaseMultiplier * slopeAngleIncrease;
-            }
-            else
-            {
-                time += Time.deltaTime * speedIncreaseMultiplier;
-            }
-            yield return null;
-        }
-
-        moveSpeed = desiredMoveSpeed;
-    }
-
     void Jump(InputAction.CallbackContext context)
     {
         if (isGrappling)
@@ -281,25 +230,12 @@ public class PlayerMovement : MonoBehaviour
         {
             rigid.velocity = new Vector3(rigid.velocity.x, 0, rigid.velocity.z);
             rigid.AddForce(transform.up * jumpForce, ForceMode.Impulse);
-            if (sliding)
+            if (isSliding)
             {
                 rigid.AddForce(transform.forward * 250f);
-                momentum += 20;
             }
             canJump = false;
             Invoke(nameof(ResetJump), jumpCooldown);
-            /*if (sliding)
-            {
-                StopSlide();
-            }*/
-
-        }
-        else if (canDoubleJump && !isWallRunning)
-        {
-            rigid.velocity = new Vector3(rigid.velocity.x, jumpForce, rigid.velocity.z);
-            canDoubleJump = false;
-            Invoke(nameof(ResetJump), jumpCooldown);
-        }
     }
 
     void ResetJump()
@@ -337,7 +273,7 @@ public class PlayerMovement : MonoBehaviour
         velocityText.text = "Velocity: " + new Vector2(rigid.velocity.x, rigid.velocity.z).magnitude;
         speedText.text = "Speed: " + moveSpeed;
         desiredText.text = "Desired Speed: " + desiredMoveSpeed;
-        momentumText.text = "Momentum: " + momentum;
+        momentumText.text = "";
     }
 
     private void OnEnable()

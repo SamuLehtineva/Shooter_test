@@ -48,6 +48,7 @@ public class Sliding : MonoBehaviour
     {
         Debug.Log("Started Sliding");
         sliding = true;
+        playerMovement.isSliding = true;
 
         transform.localScale = new Vector3(transform.localScale.x, slideYScale, transform.localScale.z);
         rigid.AddForce(Vector3.down * 5f, ForceMode.Impulse);
@@ -86,6 +87,7 @@ public class Sliding : MonoBehaviour
         {
             Debug.Log("Stopped sliding");
             sliding = false;
+            playerMovement.isSliding = false;
             transform.localScale = new Vector3(transform.localScale.x, startYScale, transform.localScale.z);
         }
     }

@@ -2116,6 +2116,10 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 446040121}
     - target: {fileID: 4786972165607323844, guid: 0ec5902b1db080a4ea0446cd2f440eed, type: 3}
+      propertyPath: jumpForce
+      value: 25
+      objectReference: {fileID: 0}
+    - target: {fileID: 4786972165607323844, guid: 0ec5902b1db080a4ea0446cd2f440eed, type: 3}
       propertyPath: speedText
       value: 
       objectReference: {fileID: 1039143499}
@@ -2131,13 +2135,17 @@ PrefabInstance:
       propertyPath: velocityText
       value: 
       objectReference: {fileID: 1697038680}
+    - target: {fileID: 4786972165607323844, guid: 0ec5902b1db080a4ea0446cd2f440eed, type: 3}
+      propertyPath: airMultiplier
+      value: 0.5
+      objectReference: {fileID: 0}
     - target: {fileID: 4786972165607323848, guid: 0ec5902b1db080a4ea0446cd2f440eed, type: 3}
       propertyPath: fuelBar
       value: 
       objectReference: {fileID: 1549049196}
     - target: {fileID: 4786972165607323848, guid: 0ec5902b1db080a4ea0446cd2f440eed, type: 3}
       propertyPath: airJumpForce
-      value: 20
+      value: 25
       objectReference: {fileID: 0}
     - target: {fileID: 4786972165607323851, guid: 0ec5902b1db080a4ea0446cd2f440eed, type: 3}
       propertyPath: m_Mass

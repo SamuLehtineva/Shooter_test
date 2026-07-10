@@ -236,6 +236,7 @@ public class PlayerMovement : MonoBehaviour
             }
             canJump = false;
             Invoke(nameof(ResetJump), jumpCooldown);
+        }
     }
 
     void ResetJump()

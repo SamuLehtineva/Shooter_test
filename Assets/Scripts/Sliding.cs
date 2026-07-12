@@ -51,7 +51,14 @@ public class Sliding : MonoBehaviour
         playerMovement.isSliding = true;
 
         transform.localScale = new Vector3(transform.localScale.x, slideYScale, transform.localScale.z);
-        rigid.AddForce(Vector3.down * 5f, ForceMode.Impulse);
+        if (!playerMovement.isGrounded)
+        {
+            rigid.AddForce(Vector3.down * 25f, ForceMode.Impulse);
+        }
+        else
+        {
+            rigid.AddForce(Vector3.down * 5f, ForceMode.Impulse);   
+        }
         
         slideTimer = maxSlideTime;
         slideDirection = playerMovement.moveDirection;
@@ -63,7 +70,14 @@ public class Sliding : MonoBehaviour
         if(!playerMovement.OnSlope() || rigid.velocity.y > -0.1f)
         {
             rigid.AddForce(slideDirection.normalized * slideForce, ForceMode.Force);
-            slideTimer -= Time.deltaTime;
+            if (playerMovement.isGrounded)
+            {
+                slideTimer -= Time.fixedDeltaTime;
+            }
+            else
+            {
+                rigid.AddForce(Vector3.down * 25f, ForceMode.Force);
+            }
         }
         else
         {

@@ -10,10 +10,6 @@ public class RocketBoost : MonoBehaviour
     public float reFuelRate;
     public float reFuelDelay;
     private float reFuelDelayTimer;
-    private float flyPowerCurrent;
-    public float flyPowerMax;
-    public float flyPowerIncrease;
-    public float flyDrainRate;
 
     public float boostPower;
     public float boostDrainRate;
@@ -31,7 +27,6 @@ public class RocketBoost : MonoBehaviour
     
     private float currentFuel;
 
-    private float flyInput;
     private float boostInput;
     private bool isFlying = false;
 
@@ -50,7 +45,6 @@ public class RocketBoost : MonoBehaviour
         pm = GetComponent<PlayerMovement>();
 
         input = pm.playerInput;
-        input.Player.Fly.Enable();
         input.Player.Boost.Enable();
         input.Player.Dash.Enable();
         input.Player.Dash.performed += StartDash;
@@ -67,7 +61,6 @@ public class RocketBoost : MonoBehaviour
 
     void FixedUpdate()
     {
-        flyInput = input.Player.Fly.ReadValue<float>();
         boostInput = input.Player.Boost.ReadValue<float>();
 
         if (dashTimer < dashDuration)
@@ -77,30 +70,7 @@ public class RocketBoost : MonoBehaviour
 
         DashCooldown();
 
-        if (flyInput > 0 && currentFuel > 0)
-        {
-            if (!isFlying)
-            {
-                isFlying = true;
-            }
-            else
-            {
-                currentFuel -= flyDrainRate * Time.deltaTime;
-            }
-
-            FlyMovement();
-
-            if (flyPowerCurrent < flyPowerMax)
-            {
-                flyPowerCurrent += flyPowerIncrease * Time.fixedDeltaTime;
-            }
-            if (flyPowerCurrent > flyPowerMax)
-            {
-                flyPowerCurrent = flyPowerMax;
-            }
-
-        }
-        else if (boostInput > 0 && currentFuel > 0)
+        if (boostInput > 0 && currentFuel > 0)
         {
             if (!isFlying)
             {
@@ -115,41 +85,28 @@ public class RocketBoost : MonoBehaviour
             pm.isBoosting = true;
             BoostMovement();
 
-            if (flyPowerCurrent < flyPowerMax)
-            {
-                flyPowerCurrent += flyPowerIncrease * Time.fixedDeltaTime;
-            }
-            if (flyPowerCurrent > flyPowerMax)
-            {
-                flyPowerCurrent = flyPowerMax;
-            }
-
         }
         else
         {
             isFlying = false;
-            flyPowerCurrent = 0;
             pm.isBoosting = false;
-
-            if (flyPowerCurrent > 0)
-            {
-                flyPowerCurrent -= 7 * Time.fixedDeltaTime;
-            }
-            
-            if (flyPowerCurrent < 0)
-            {
-                flyPowerCurrent = 0;
-            }
         }
-        reFuelDelayTimer += Time.fixedDeltaTime;
-        ReFuel();
+        
+        if (pm.isGrounded && currentFuel < maxFuel)
+        {
+            ReFuel();
+        }
     }
 
     void ReFuel()
     {
-        if (pm.isGrounded && currentFuel < maxFuel && reFuelDelayTimer >= reFuelDelay)
+        if (reFuelDelayTimer >= reFuelDelay)
         {
             currentFuel += reFuelRate * Time.deltaTime;
+        }
+        else
+        {
+            reFuelDelayTimer += Time.fixedDeltaTime;
         }
     }
 
@@ -169,7 +126,7 @@ public class RocketBoost : MonoBehaviour
 
     public void AirJump(InputAction.CallbackContext context)
     {
-        if (!pm.isGrounded && !pm.isGrappling)
+        if (!pm.isGrounded && !pm.isGrappling && !pm.isWallRunning)
         {
             if (UseFuel(airJumpFuelDrain))
             {
@@ -177,18 +134,6 @@ public class RocketBoost : MonoBehaviour
             }
         }
        
-    }
-
-    void FlyMovement()
-    {
-        if (rigid.velocity.y < 0)
-        {
-            rigid.velocity = new Vector3(rigid.velocity.x, flyPowerCurrent, rigid.velocity.z);
-        }
-        else
-        {
-            rigid.velocity = new Vector3(rigid.velocity.x, flyPowerCurrent, rigid.velocity.z);
-        }
     }
 
     void BoostMovement()
@@ -237,7 +182,6 @@ public class RocketBoost : MonoBehaviour
             dashCooldownTimer += Time.fixedDeltaTime;
         }
     }
-
 
     void OnDisable()
     {

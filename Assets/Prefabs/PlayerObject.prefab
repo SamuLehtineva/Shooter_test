@@ -767,12 +767,20 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 4786972163910372657}
     - target: {fileID: 2292694230993138850, guid: 88b791e40fe68f24994d49637d61005a, type: 3}
+      propertyPath: jumpForce
+      value: 25
+      objectReference: {fileID: 0}
+    - target: {fileID: 2292694230993138850, guid: 88b791e40fe68f24994d49637d61005a, type: 3}
       propertyPath: speedText
       value: 
       objectReference: {fileID: 0}
     - target: {fileID: 2292694230993138850, guid: 88b791e40fe68f24994d49637d61005a, type: 3}
       propertyPath: desiredText
       value: 
+      objectReference: {fileID: 0}
+    - target: {fileID: 2292694230993138850, guid: 88b791e40fe68f24994d49637d61005a, type: 3}
+      propertyPath: airMultiplier
+      value: 0.5
       objectReference: {fileID: 0}
     - target: {fileID: 2292694230993138851, guid: 88b791e40fe68f24994d49637d61005a, type: 3}
       propertyPath: m_Name
@@ -845,6 +853,10 @@ PrefabInstance:
     - target: {fileID: 2292694230993138862, guid: 88b791e40fe68f24994d49637d61005a, type: 3}
       propertyPath: reFuelDelay
       value: 0.7
+      objectReference: {fileID: 0}
+    - target: {fileID: 2292694230993138862, guid: 88b791e40fe68f24994d49637d61005a, type: 3}
+      propertyPath: airJumpForce
+      value: 25
       objectReference: {fileID: 0}
     - target: {fileID: 2292694230993138862, guid: 88b791e40fe68f24994d49637d61005a, type: 3}
       propertyPath: cameraHolder

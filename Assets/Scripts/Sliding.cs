@@ -46,7 +46,6 @@ public class Sliding : MonoBehaviour
 
     void StartSlide(InputAction.CallbackContext context)
     {
-        Debug.Log("Started Sliding");
         sliding = true;
         playerMovement.isSliding = true;
 
@@ -61,7 +60,15 @@ public class Sliding : MonoBehaviour
         }
         
         slideTimer = maxSlideTime;
-        slideDirection = playerMovement.moveDirection;
+        if (playerMovement.moveInput == Vector2.zero)
+        {
+            slideDirection = playerMovement.orientation.forward;
+        }
+        else
+        {
+            slideDirection = playerMovement.moveDirection;
+        }
+        Debug.Log(slideDirection);
         
     }
 
@@ -69,7 +76,7 @@ public class Sliding : MonoBehaviour
     {   
         if(!playerMovement.OnSlope() || rigid.velocity.y > -0.1f)
         {
-            rigid.AddForce(slideDirection.normalized * slideForce, ForceMode.Force);
+            rigid.AddForce(slideDirection.normalized * slideForce * 10f, ForceMode.Force);
             if (playerMovement.isGrounded)
             {
                 slideTimer -= Time.fixedDeltaTime;
@@ -81,7 +88,7 @@ public class Sliding : MonoBehaviour
         }
         else
         {
-            rigid.AddForce(playerMovement.GetSlopeMoveDirection() * slideForce * 1.5f, ForceMode.Force);
+            rigid.AddForce(playerMovement.GetSlopeMoveDirection() * slideForce * 15f, ForceMode.Force);
 
             if (playerMovement.GetSlopeMoveDirection().y < 0.1f)
             {
@@ -99,7 +106,6 @@ public class Sliding : MonoBehaviour
     {
         if (sliding)
         {
-            Debug.Log("Stopped sliding");
             sliding = false;
             playerMovement.isSliding = false;
             transform.localScale = new Vector3(transform.localScale.x, startYScale, transform.localScale.z);

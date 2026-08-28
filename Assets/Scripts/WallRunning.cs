@@ -86,14 +86,10 @@ public class WallRunning : MonoBehaviour
         }
     }
 
-    void Update()
+    void FixedUpdate()
     {
         WallCheck();
         StateMachine();
-    }
-
-    void FixedUpdate()
-    {
         if (pm.isWallRunning)
         {
             WallRunningMovement();
@@ -114,7 +110,6 @@ public class WallRunning : MonoBehaviour
     void StartWallRun()
     {
         pm.isWallRunning = true;
-        pm.ResetDoubleJump();
         wallRunTimer = maxWallRunTime;
         rigid.velocity = new Vector3(rigid.velocity.x, 0f, rigid.velocity.z);
         //cam.DoFov(110f);
@@ -140,7 +135,7 @@ public class WallRunning : MonoBehaviour
             wallForward = -wallForward;
         }
 
-        rigid.AddForce(wallForward * wallRunForce, ForceMode.Force);
+        rigid.AddForce(wallForward * wallRunForce * 10f, ForceMode.Force);
 
         // push to wall
         if (!(wallLeft && moveInput.y > 0) && !(wallRight && moveInput.y < 0))

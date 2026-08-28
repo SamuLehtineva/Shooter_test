@@ -26,7 +26,6 @@ public class PlayerMovement : MonoBehaviour
     public float jumpCooldown;
     public float airMultiplier;
     private bool canJump;
-    private bool canDoubleJump;
     
     [Header("Ground Check")]
     public float playerHeight;
@@ -37,13 +36,14 @@ public class PlayerMovement : MonoBehaviour
     public float maxSlopeAngle;
     RaycastHit slopeHit;
     
-    private Vector2 moveInput;
-    [HideInInspector]
-    public Vector3 moveDirection;
+    
+    [HideInInspector] public Vector2 moveInput;
+    [HideInInspector] public Vector3 moveDirection;
     public PlayerInput playerInput;
 
     private Rigidbody rigid;
 
+    [Header("Misc")]
     public TextMeshProUGUI velocityText;
     public TextMeshProUGUI speedText;
     public TextMeshProUGUI desiredText;
@@ -58,11 +58,8 @@ public class PlayerMovement : MonoBehaviour
     public enum MovementState
     {
         walking,
-        air,
-        isSliding,
-        slidejump,
+        sliding,
         wallrunning,
-        walljump,
         boosting
     }
 
@@ -79,42 +76,6 @@ public class PlayerMovement : MonoBehaviour
         canJump = true;
     }
 
-    void Update()
-    {
-        UpdateText();
-    }
-
-    void FixedUpdate() {
-        MyInput();
-
-        isGrounded = Physics.Raycast(transform.position, Vector3.down, playerHeight * 0.5f + 0.2f, groundMask);
-        if (isGrounded && !isGrappling)
-        {
-            rigid.drag = groundDrag;
-            ResetDoubleJump();
-            if (!isSliding)
-            {
-                //momentum = false;
-            }
-        }
-        else
-        {
-            rigid.drag = 0;
-        }
-
-        StateHandler();
-
-        if (!isBoosting && !isGrappling)
-        {
-            SpeedControl();
-            MovePlayer();
-        }
-        else
-        {
-            rigid.useGravity = false;
-        }
-    }
-
     void StateHandler()
     {
         if (isWallRunning)
@@ -124,7 +85,7 @@ public class PlayerMovement : MonoBehaviour
         }
         else if (isGrounded && isSliding)
         {
-            state = MovementState.isSliding;
+            state = MovementState.sliding;
 
             if (OnSlope() && rigid.velocity.y < 0.1f)
             {
@@ -142,20 +103,44 @@ public class PlayerMovement : MonoBehaviour
         }
         else
         {
-            state = MovementState.air;
+            state = MovementState.walking;
+        }
+        moveSpeed = desiredMoveSpeed;
+    }
+
+    void Update()
+    {
+        UpdateText();
+    }
+
+    void FixedUpdate() {
+        MyInput();
+
+        isGrounded = Physics.Raycast(transform.position, Vector3.down, playerHeight * 0.5f + 0.2f, groundMask);
+        if (isGrounded && !isGrappling)
+        {
+            rigid.drag = groundDrag;
+            if (!isSliding)
+            {
+                //momentum = false;
+            }
+        }
+        else
+        {
+            rigid.drag = 0;
         }
 
+        StateHandler();
 
-        if (Mathf.Abs(desiredMoveSpeed - lastDesiredMoveSpeed) > 2f && moveSpeed != 0)
+        if (!isBoosting && !isGrappling)
         {
-            /*StopCoroutine(LerpMoveSpeed());
-            StartCoroutine(LerpMoveSpeed());*/
+            MovePlayer();
+            SpeedControl();
         }
-        else if (isGrounded && !isWallRunning && !isSliding)
+        else
         {
-            moveSpeed = desiredMoveSpeed;
+            rigid.useGravity = false;
         }
-        lastDesiredMoveSpeed = desiredMoveSpeed;
     }
 
     void MyInput()
@@ -166,36 +151,39 @@ public class PlayerMovement : MonoBehaviour
     void MovePlayer()
     {
         moveDirection = orientation.forward * moveInput.y + orientation.right * moveInput.x;
-
-        if (OnSlope())
-		{
-            rigid.AddForce(GetSlopeMoveDirection() * moveSpeed * 10f, ForceMode.Force);
-                
-            if (canJump)
-			{
-                if (GetSlopeMoveDirection().y < 0.1f)
+        if (state == MovementState.walking)
+        {
+            if (OnSlope())
+		    {
+                rigid.AddForce(GetSlopeMoveDirection() * moveSpeed * 10f, ForceMode.Force);
+                    
+                if (canJump)
                 {
-                    rigid.AddForce(Vector3.down * 80f, ForceMode.Force);
+                    if (GetSlopeMoveDirection().y < 0.1f)
+                    {
+                        rigid.AddForce(Vector3.down * 80f, ForceMode.Force);
+                    }
                 }
-			}
-		}
-        else if (isGrounded)
-        {
-            rigid.AddForce(moveDirection.normalized * moveSpeed * 10f, ForceMode.Force);
-        }
-        else if (!isGrounded)
-        {
-            rigid.AddForce(moveDirection.normalized * moveSpeed * 10f * airMultiplier, ForceMode.Force);
-        }
+            }
+            else if (isGrounded)
+            {
+                rigid.AddForce(moveDirection.normalized * moveSpeed * 10f, ForceMode.Force);
+            }
+            else if (!isGrounded)
+            {
+                rigid.AddForce(moveDirection.normalized * moveSpeed * 10f * airMultiplier, ForceMode.Force);
+            }
 
-        if (OnSlope() || isWallRunning || isBoosting || isGrappling)
-        {
-            rigid.useGravity = false;
+            if (OnSlope() || isWallRunning || isBoosting || isGrappling)
+            {
+                rigid.useGravity = false;
+            }
+            else
+            {
+                rigid.useGravity = true;
+            }
         }
-        else
-        {
-            rigid.useGravity = true;
-        }
+        
         //rigid.useGravity = !OnSlope();
     }
 
@@ -243,12 +231,6 @@ public class PlayerMovement : MonoBehaviour
     {
         canJump = true;
     }
-
-    public void ResetDoubleJump()
-    {
-        canDoubleJump = true;
-    }
-
 
     public bool OnSlope()
     {

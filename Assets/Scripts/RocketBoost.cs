@@ -100,13 +100,13 @@ public class RocketBoost : MonoBehaviour
 
     void ReFuel()
     {
-        if (reFuelDelayTimer >= reFuelDelay)
+        if (reFuelDelayTimer <= 0)
         {
             currentFuel += reFuelRate * Time.deltaTime;
         }
         else
         {
-            reFuelDelayTimer += Time.fixedDeltaTime;
+            reFuelDelayTimer -= Time.fixedDeltaTime;
         }
     }
 
@@ -115,7 +115,7 @@ public class RocketBoost : MonoBehaviour
         if(currentFuel >= fuelUsed)
         {
             currentFuel -= fuelUsed;
-            reFuelDelayTimer = 0;
+            reFuelDelayTimer = reFuelDelay;
             return true;
         }
         else

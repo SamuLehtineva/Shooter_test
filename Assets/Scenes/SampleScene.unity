@@ -2139,6 +2139,18 @@ PrefabInstance:
       propertyPath: fuelBar
       value: 
       objectReference: {fileID: 1549049196}
+    - target: {fileID: 4786972165607323848, guid: 0ec5902b1db080a4ea0446cd2f440eed, type: 3}
+      propertyPath: dashSpeed
+      value: 250
+      objectReference: {fileID: 0}
+    - target: {fileID: 4786972165607323848, guid: 0ec5902b1db080a4ea0446cd2f440eed, type: 3}
+      propertyPath: reFuelRate
+      value: 40
+      objectReference: {fileID: 0}
+    - target: {fileID: 4786972165607323848, guid: 0ec5902b1db080a4ea0446cd2f440eed, type: 3}
+      propertyPath: dashDuration
+      value: 0.4
+      objectReference: {fileID: 0}
     - target: {fileID: 4786972165607323849, guid: 0ec5902b1db080a4ea0446cd2f440eed, type: 3}
       propertyPath: wallRunForce
       value: 1
